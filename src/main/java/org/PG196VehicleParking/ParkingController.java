@@ -1,10 +1,7 @@
-package org.example;
+package org.PG196VehicleParking;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.io.*;
 import java.util.*;
 
 @RestController
