@@ -1,6 +1,6 @@
 
 // Motorbike.java
-package org.example;
+package org.PG196VehicleParking;
 
 public class Motorbike extends Vehicle {
     private boolean hasSidecar;
