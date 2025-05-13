@@ -1,5 +1,5 @@
 // Vehicle.java (abstract class)
-package org.example;
+package org.PG196VehicleParking;
 
 public abstract class Vehicle {
     protected String plateNumber;

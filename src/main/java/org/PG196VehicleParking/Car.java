@@ -1,4 +1,4 @@
-package org.example;
+package org.PG196VehicleParking;
 
 public class Car extends Vehicle {
     private int doors;

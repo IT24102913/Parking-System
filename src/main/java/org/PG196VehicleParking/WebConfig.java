@@ -1,4 +1,4 @@
-package org.example.config;
+package org.PG196VehicleParking;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
