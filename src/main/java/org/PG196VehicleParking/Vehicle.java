@@ -9,6 +9,10 @@ public abstract class Vehicle {
         this.plateNumber = plateNumber;
         this.model = model;
     }
+    public Vehicle(String plateNumber) {
+
+        this.plateNumber = plateNumber;
+    }
 
     public String getPlateNumber() {
         return plateNumber;
