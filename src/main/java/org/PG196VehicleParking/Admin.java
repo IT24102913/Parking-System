@@ -68,15 +68,4 @@ public class Admin {
         return ResponseEntity.ok(admins);
     }
 
-
-    @DeleteMapping("/delete/{email}")
-    public ResponseEntity<String> deleteAdmin(@PathVariable String email) {
-        boolean removed = deleteFromFile(ADMIN_FILE, email);
-        if (removed) {
-            return ResponseEntity.ok("Admin deleted successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Admin not found");
-        }
-
-    }
 }
