@@ -61,11 +61,4 @@ public class Admin {
         return ResponseEntity.ok("Admin added successfully");
     }
 
-
-    @GetMapping("/list")
-    public ResponseEntity<List<Admin>> listAdmins() {
-        List<Admin> admins = readFromFile(ADMIN_FILE);
-        return ResponseEntity.ok(admins);
-    }
-
 }
