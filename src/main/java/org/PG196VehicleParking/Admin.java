@@ -62,6 +62,10 @@ public class Admin {
     }
 
 
-
+    @GetMapping("/list")
+    public ResponseEntity<List<Admin>> listAdmins() {
+        List<Admin> admins = readFromFile(ADMIN_FILE);
+        return ResponseEntity.ok(admins);
+    }
 
 }
