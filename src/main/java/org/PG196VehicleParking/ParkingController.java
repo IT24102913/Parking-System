@@ -21,10 +21,13 @@ public class ParkingController {
 
     private Stack<ParkingSlot> parkingSlots = new Stack<>();
 
+
+
     @GetMapping("/slots")
     public List<ParkingSlot> getAllSlots() {
         return new ArrayList<>(parkingSlots);
     }
+
 
     @PostMapping("/create")
     public ParkingSlot addSlot(@RequestBody ParkingSlot slot) {
@@ -33,23 +36,94 @@ public class ParkingController {
         return slot;
     }
 
+
     @PutMapping("/update/{slotId}")
-    public ParkingSlot updateSlot(@PathVariable int slotId, @RequestBody ParkingSlot updatedSlot) {
+    public ResponseEntity<?> updateSlot(@PathVariable int slotId, @RequestBody ParkingSlot updatedSlot) {
         for (ParkingSlot slot : parkingSlots) {
             if (slot.getSlotId() == slotId) {
-                slot.setIsOccupied(updatedSlot.isOccupied());
+                if (updatedSlot.isOccupied() != slot.isOccupied()) {
+                    if (!updatedSlot.isOccupied()) {
+
+                        List<Map<String, String>> history = readAllHistory();
+                        for (Map<String, String> entry : history) {
+                            if (Integer.parseInt(entry.get("slotId")) == slotId && entry.get("exitTime").equals("-")) {
+
+                                String email = entry.get("email");
+                                String plateNumber = entry.get("plateNumber");
+                                Date now = new Date();
+                                Date entryTime = new Date(Long.parseLong(entry.get("entryTime")));
+                                Map<String, String> vehicle = findVehicleByPlate(plateNumber);
+                                if (vehicle != null) {
+                                    int doors = vehicle.containsKey("doors") ? Integer.parseInt(vehicle.get("doors")) : 0;
+                                    boolean hasSidecar = vehicle.containsKey("hasSidecar") && Boolean.parseBoolean(vehicle.get("hasSidecar"));
+                                    double fee = ParkingFeeCalculator.calculateFee(
+                                            entryTime, now,
+                                            vehicle.get("type"),
+                                            doors,
+                                            hasSidecar
+                                    );
+                                    updateHistoryExit(email, slotId, now, fee);
+                                    recordFeeTransaction(email, slotId, plateNumber, fee);
+                                }
+                            }
+                        }
+                    } else {
+                        // Prevent marking as occupied if no active reservation
+                        List<Map<String, String>> history = readAllHistory();
+                        boolean isReserved = history.stream()
+                                .anyMatch(entry -> Integer.parseInt(entry.get("slotId")) == slotId && entry.get("exitTime").equals("-"));
+                        if (isReserved) {
+                            return ResponseEntity.badRequest().body("Cannot mark slot as occupied; it is already reserved.");
+                        }
+                    }
+                    slot.setIsOccupied(updatedSlot.isOccupied());
+                    saveSlotsToFile();
+                    return ResponseEntity.ok(slot);
+                }
+                return ResponseEntity.ok(slot);
             }
         }
-        saveSlotsToFile();
-        return updatedSlot;
+        return ResponseEntity.badRequest().body("Slot not found");
     }
+
 
     @DeleteMapping("/delete/{slotId}")
     public ResponseEntity<?> deleteSlot(@PathVariable int slotId) {
-        parkingSlots.removeIf(slot -> slot.getSlotId() == slotId);
-        saveSlotsToFile();
-        return ResponseEntity.ok(Collections.singletonMap("message", "Slot " + slotId + " deleted."));
+
+        List<Map<String, String>> history = readAllHistory();
+        for (Map<String, String> entry : history) {
+            if (Integer.parseInt(entry.get("slotId")) == slotId && entry.get("exitTime").equals("-")) {
+
+                String email = entry.get("email");
+                String plateNumber = entry.get("plateNumber");
+                Date now = new Date();
+                Date entryTime = new Date(Long.parseLong(entry.get("entryTime")));
+                Map<String, String> vehicle = findVehicleByPlate(plateNumber);
+                if (vehicle != null) {
+                    int doors = vehicle.containsKey("doors") ? Integer.parseInt(vehicle.get("doors")) : 0;
+                    boolean hasSidecar = vehicle.containsKey("hasSidecar") && Boolean.parseBoolean(vehicle.get("hasSidecar"));
+                    double fee = ParkingFeeCalculator.calculateFee(
+                            entryTime, now,
+                            vehicle.get("type"),
+                            doors,
+                            hasSidecar
+                    );
+                    updateHistoryExit(email, slotId, now, fee);
+                    recordFeeTransaction(email, slotId, plateNumber, fee);
+                }
+            }
+        }
+
+
+        boolean removed = parkingSlots.removeIf(slot -> slot.getSlotId() == slotId);
+        if (removed) {
+            saveSlotsToFile();
+            return ResponseEntity.ok(Collections.singletonMap("message", "Slot " + slotId + " deleted."));
+        } else {
+            return ResponseEntity.badRequest().body("Slot not found");
+        }
     }
+
 
     @GetMapping("/sort")
     public List<ParkingSlot> sortSlots() {
@@ -57,6 +131,7 @@ public class ParkingController {
         quicksort(sorted, 0, sorted.size() - 1);
         return sorted;
     }
+
 
     private void quicksort(List<ParkingSlot> list, int low, int high) {
         if (low < high) {
@@ -84,6 +159,7 @@ public class ParkingController {
         return i + 1;
     }
 
+
     private void saveSlotsToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SLOT_FILE))) {
             for (ParkingSlot slot : parkingSlots) {
@@ -94,6 +170,7 @@ public class ParkingController {
             e.printStackTrace();
         }
     }
+
 
     @PostConstruct
     public void loadSlotsFromFile() {
@@ -110,4 +187,5 @@ public class ParkingController {
             e.printStackTrace();
         }
     }
+
 }
