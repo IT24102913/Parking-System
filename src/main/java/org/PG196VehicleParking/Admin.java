@@ -47,18 +47,5 @@ public class Admin {
     }
 
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addAdmin(@RequestBody Admin admin) {
-        if (admin.getEmail() == null || admin.getPassword() == null) {
-            return ResponseEntity.badRequest().body("Email and password are required");
-        }
-
-        if (existsInFile(ADMIN_FILE, admin.getEmail())) {
-            return ResponseEntity.badRequest().body("Admin already exists");
-        }
-
-        writeToFile(ADMIN_FILE, admin.getEmail(), admin.getPassword());
-        return ResponseEntity.ok("Admin added successfully");
-    }
 
 }
