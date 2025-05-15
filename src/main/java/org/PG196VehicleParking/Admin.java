@@ -1,4 +1,4 @@
-ackage org.PG196VehicleParking;
+package org.PG196VehicleParking;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
