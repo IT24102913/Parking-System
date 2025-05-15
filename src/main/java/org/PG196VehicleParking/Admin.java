@@ -1,4 +1,4 @@
-package org.PG196VehicleParking;
+ackage org.PG196VehicleParking;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +8,7 @@ import java.nio.file.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/parking/admin")
 public class Admin {
 
 
@@ -63,9 +63,26 @@ public class Admin {
 
 
     @GetMapping("/list")
-    public ResponseEntity<List<Admin>> listAdmins() {
+    public ResponseEntity<List<Map<String, String>>> listAdmins() {
         List<Admin> admins = readFromFile(ADMIN_FILE);
-        return ResponseEntity.ok(admins);
+        List<Map<String, String>> result = new ArrayList<>();
+        for (Admin a : admins) {
+            Map<String, String> map = new HashMap<>();
+            map.put("email", a.getEmail());
+            map.put("password", a.getPassword());
+            result.add(map);
+        }
+        return ResponseEntity.ok(result);
     }
 
+
+    @DeleteMapping("/delete/{email}")
+    public ResponseEntity<String> deleteAdmin(@PathVariable String email) {
+        boolean removed = deleteFromFile(ADMIN_FILE, email);
+        if (removed) {
+            return ResponseEntity.ok("Admin deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Admin not found");
+        }
+    }
 }
