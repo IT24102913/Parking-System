@@ -19,7 +19,7 @@ public class ParkingController {
     private static final String HISTORY_FILE = "parking_history.txt";
     private static final String FEE_HISTORY_FILE = "parking_fees.txt";
 
-    // ========== PERSON 1: SLOT MANAGEMENT ========== //
+    // ========== IT24102913  SLOT MANAGEMENT ========== //
 
     private Stack<ParkingSlot> parkingSlots = new Stack<>();
 
