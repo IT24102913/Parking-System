@@ -19,15 +19,14 @@ public class ParkingController {
     private static final String HISTORY_FILE = "parking_history.txt";
     private static final String FEE_HISTORY_FILE = "parking_fees.txt";
 
+    // ========== PERSON 1: SLOT MANAGEMENT ========== //
+
     private Stack<ParkingSlot> parkingSlots = new Stack<>();
-
-
 
     @GetMapping("/slots")
     public List<ParkingSlot> getAllSlots() {
         return new ArrayList<>(parkingSlots);
     }
-
 
     @PostMapping("/create")
     public ParkingSlot addSlot(@RequestBody ParkingSlot slot) {
@@ -35,7 +34,6 @@ public class ParkingController {
         saveSlotsToFile();
         return slot;
     }
-
 
     @PutMapping("/update/{slotId}")
     public ResponseEntity<?> updateSlot(@PathVariable int slotId, @RequestBody ParkingSlot updatedSlot) {
