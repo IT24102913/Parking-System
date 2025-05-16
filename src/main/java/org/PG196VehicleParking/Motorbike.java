@@ -9,6 +9,10 @@ public class Motorbike extends Vehicle {
         super(plateNumber, model);
         this.hasSidecar = hasSidecar;
     }
+    public Motorbike(String plateNumber, boolean hasSidecar) {
+        super(plateNumber);
+        this.hasSidecar = hasSidecar;
+    }
 
     @Override
     public String getType() {
