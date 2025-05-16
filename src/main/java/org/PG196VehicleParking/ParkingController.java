@@ -186,4 +186,95 @@ public class ParkingController {
         }
     }
 
+// ========== IT24102678: VEHICLE MANAGEMENT ========== //
+
+    @PostMapping("/vehicle/register")
+    public ResponseEntity<String> registerVehicle(@RequestBody Map<String, String> payload) {
+        String type = payload.get("type");
+        String plate = payload.get("plateNumber");
+
+        Vehicle vehicle;
+        try {
+            if ("Car".equalsIgnoreCase(type)) {
+                int doors = Integer.parseInt(payload.get("doors"));
+                if (doors != 2 && doors != 4) {
+                    return ResponseEntity.badRequest().body("Car must have either 2 or 4 doors.");
+                }
+                vehicle = new Car(plate, doors);
+            } else if ("Motorbike".equalsIgnoreCase(type)) {
+                boolean sidecar = Boolean.parseBoolean(payload.get("hasSidecar"));
+                vehicle = new Motorbike(plate, sidecar);
+            } else {
+                return ResponseEntity.badRequest().body("Invalid vehicle type.");
+            }
+
+            saveVehicleToFile(vehicle);
+            return ResponseEntity.ok(vehicle.getType() + " with plate " + vehicle.getPlateNumber() + " registered.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/vehicle/list")
+    public List<Map<String, String>> listVehicles() {
+        List<Map<String, String>> vehicles = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(VEHICLE_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 2) {
+                    Map<String, String> vehicle = new HashMap<>();
+                    vehicle.put("type", parts[0]);
+                    vehicle.put("plateNumber", parts[1]);
+                    if (parts.length > 2) {
+                        if (parts[0].equals("Car")) {
+                            vehicle.put("doors", parts[2]);
+                        } else if (parts[0].equals("Motorbike")) {
+                            vehicle.put("hasSidecar", parts[2]);
+                        }
+                    }
+                    vehicles.add(vehicle);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return vehicles;
+    }
+
+    @GetMapping("/vehicle/parked")
+    public List<Map<String, String>> getParkedVehicles() {
+        List<Map<String, String>> parkedVehicles = new ArrayList<>();
+        List<Map<String, String>> history = readAllHistory();
+
+        for (Map<String, String> entry : history) {
+            if ("-".equals(entry.get("exitTime"))) {
+                List<Map<String, String>> vehicles = listVehicles();
+                for (Map<String, String> vehicle : vehicles) {
+                    if (vehicle.get("plateNumber").equals(entry.get("plateNumber"))) {
+                        Map<String, String> parkedVehicle = new HashMap<>(vehicle);
+                        parkedVehicle.put("slotId", entry.get("slotId"));
+                        parkedVehicles.add(parkedVehicle);
+                        break;
+                    }
+                }
+            }
+        }
+        return parkedVehicles;
+    }
+
+    private void saveVehicleToFile(Vehicle vehicle) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(VEHICLE_FILE, true))) {
+            String details = "";
+            if (vehicle instanceof Car) {
+                details = "," + ((Car) vehicle).getDoors();
+            } else if (vehicle instanceof Motorbike) {
+                details = "," + ((Motorbike) vehicle).hasSidecar();
+            }
+            writer.write(vehicle.getType() + "," + vehicle.getPlateNumber() + details);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
