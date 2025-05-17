@@ -6,28 +6,45 @@ public class ParkingFeeCalculator {
     public static double calculateFee(Date entryTime, Date exitTime, String vehicleType, int doors, boolean hasSidecar) {
         long durationMillis = exitTime.getTime() - entryTime.getTime();
         double hours = durationMillis / (1000.0 * 60 * 60);
-        return Math.ceil(hours) * 50.0;
-    }
+        double totalFee;
 
-    double rate;
     if ("Car".equalsIgnoreCase(vehicleType)) {
         if (doors == 4) {
-            rate = 100.0;
+            totalFee = 100.0; // First hour
+            if (hours > 1) {
+                totalFee += 80.0 * (Math.ceil(hours) - 1);
+            }
         } else if (doors == 2) {
-            rate = 90.0;
+            totalFee = 90.0; // First hour
+            if (hours > 1) {
+                totalFee += 70.0 * (Math.ceil(hours) - 1);
+            }
         } else {
-            rate = 80.0;
+            totalFee = 80.0; // Default for unknown Cars
+            if (hours > 1) {
+                totalFee += 70.0 * (Math.ceil(hours) - 1);
+            }
         }
     } else if ("Motorbike".equalsIgnoreCase(vehicleType)) {
         if (hasSidecar) {
-            rate = 60.0;
+            totalFee = 60.0; // First hour
+            if (hours > 1) {
+                totalFee += 55.0 * (Math.ceil(hours) - 1);
+            }
         } else {
-            rate = 50.0;
+            totalFee = 50.0; // First hour
+            if (hours > 1) {
+                totalFee += 40.0 * (Math.ceil(hours) - 1);
+            }
         }
     } else {
-        rate = 40.0;
+        totalFee = 40.0; // Default for unknown vehicle types
+        if (hours > 1) {
+            totalFee += 30.0 * (Math.ceil(hours) - 1);
+        }
     }
 
-    return Math.ceil(hours) * rate;
+    return totalFee < 1.0 ? 1.0 : totalFee; // Apply a minimum fee
+}
 }
 
