@@ -269,4 +269,98 @@ public class ParkingController {
         }
     }
 
+    // ========== IT24104385: PARKING FEE & HISTORY MANAGEMENT ========== //
+
+
+
+    @PostMapping("/reserve")
+    public ResponseEntity<?> reserveSlot(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        int slotId = Integer.parseInt(payload.get("slotId"));
+        String plateNumber = payload.get("plateNumber");
+        Date now = new Date();
+
+        for (ParkingSlot slot : parkingSlots) {
+            if (slot.getSlotId() == slotId && !slot.isOccupied()) {
+                slot.setIsOccupied(true);
+                saveSlotsToFile();
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(HISTORY_FILE, true))) {
+                    writer.write(email + "," + slotId + "," + now.getTime() + ",-," + plateNumber);
+                    writer.newLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return ResponseEntity.ok("Slot reserved");
+            }
+        }
+        return ResponseEntity.badRequest().body("Slot not available");
+    }
+
+
+    @PostMapping("/leave")
+    public ResponseEntity<?> leaveSlot(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        int slotId = Integer.parseInt(payload.get("slotId"));
+        Date now = new Date();
+
+        for (ParkingSlot slot : parkingSlots) {
+            if (slot.getSlotId() == slotId && slot.isOccupied()) {
+                slot.setIsOccupied(false);
+                saveSlotsToFile();
+
+                Map<String, String> entry = findParkingEntry(email, slotId);
+                if (entry != null) {
+                    Date entryTime = new Date(Long.parseLong(entry.get("entryTime")));
+                    Map<String, String> vehicle = findVehicleByPlate(entry.get("plateNumber"));
+                    if (vehicle != null) {
+                        int doors = vehicle.containsKey("doors") ? Integer.parseInt(vehicle.get("doors")) : 0;
+                        boolean hasSidecar = vehicle.containsKey("hasSidecar") && Boolean.parseBoolean(vehicle.get("hasSidecar"));
+                        double fee = ParkingFeeCalculator.calculateFee(
+                                entryTime, now,
+                                vehicle.get("type"),
+                                doors,
+                                hasSidecar
+                        );
+
+                        updateHistoryExit(email, slotId, now, fee);
+                        recordFeeTransaction(email, slotId, entry.get("plateNumber"), fee);
+                        return ResponseEntity.ok(Collections.singletonMap("fee", fee));
+                    }
+                }
+                return ResponseEntity.ok("Slot left (fee not calculated)");
+            }
+        }
+        return ResponseEntity.badRequest().body("Slot not occupied");
+    }
+
+
+    @GetMapping("/history/{email}")
+    public List<Map<String, String>> getHistory(@PathVariable String email) {
+        return readHistory(email);
+    }
+
+
+    @GetMapping("/fee/history")
+    public List<Map<String, String>> getFeeHistory() {
+        List<Map<String, String>> fees = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FEE_HISTORY_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 5) {
+                    Map<String, String> feeRecord = new HashMap<>();
+                    feeRecord.put("email", parts[0]);
+                    feeRecord.put("slotId", parts[1]);
+                    feeRecord.put("plateNumber", parts[2]);
+                    feeRecord.put("fee", parts[3]);
+                    feeRecord.put("timestamp", parts[4] + (parts.length > 5 ? "," + parts[5] : ""));
+                    fees.add(feeRecord);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fees;
+    }
+
 }
