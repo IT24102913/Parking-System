@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Dashboard - Smart Parking Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* macOS glassmorphism: light, frosted glass */
+            --glass-bg: rgba(255,255,255,0.15); /* semi-transparent white for glass effect */
+            --glass-border: rgba(255,255,255,0.25);
+            --text-color: #233347;
+        }
+
+        html, body { height: 100%; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body {
+            min-height: 100vh;
+            background: url('wallpaper.jpg') center center/cover no-repeat fixed, linear-gradient(135deg, #233347cc 0%, #1e2746cc 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            color: #eaf1fb;
+            animation: zoom 30s infinite alternate;
+        }
+        @keyframes zoom {
+            0% {
+                background-size: 100% 100%;
+            }
+            100% {
+                background-size: 120% 120%;
+            }
+        }
+        .navbar {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            height: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-sizing: border-box;
+            box-shadow: 0 2px 16px 0 rgba(31,38,135,0.10);
+        }
+        .navbar .logo {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar ul li { display: inline-block; }
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        .navbar ul li a.active,
+        .navbar ul li a:hover {
+            color: #4e8cff;
+            background: rgba(255,255,255,0.07);
+        }
+        .navbar .login-btn {
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 6px 22px;
+            background: transparent;
+            color: #fff;
+            font-weight: 500;
+            margin-left: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .page-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: pageFadeIn 0.7s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        @keyframes pageFadeIn {
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        .dashboard-title {
+            font-size: 2.3rem; font-weight: 700; color: #eaf1fb; margin-bottom: 18px; text-align: left;
+        }
+        .dashboard-desc {
+            font-size: 1.1rem; color: #b6c6e3; margin-bottom: 32px; text-align: left;
+        }
+        .dashboard-card, .glass-card {
+            background: rgb(255, 255, 255); /* semi-transparent glass look */
+            border: 1px solid rgb(255, 255, 255); /* subtle border */
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1); /* soft shadow */
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+            border-radius: 18px;
+
+            color: inherit;
+            padding: 36px 32px;
+            min-width: 320px;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto 30px auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .dashboard-card, .glass-card {
+            background: none;
+            border: none;
+            box-shadow: none;
+            color: inherit;
+            padding: 36px 32px;
+            min-width: 320px;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto 30px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .dashboard-actions {
+            display: flex; gap: 18px; margin-bottom: 24px; flex-wrap: wrap;
+        }
+        .dashboard-btn {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: #fff; border: none; border-radius: 8px; padding: 10px 28px;
+            font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(31,38,135,0.10);
+        }
+        .dashboard-btn:hover { background: linear-gradient(90deg, #00d2ff, #3a7bd5); }
+        .dashboard-section-title {
+            font-size: 1.2rem; color: #4e8cff; margin-bottom: 10px; margin-top: 18px;
+        }
+        .dashboard-table {
+            width: 100%; border-collapse: collapse; margin-bottom: 18px; background: transparent;
+        }
+        .dashboard-table th, .dashboard-table td {
+            padding: 12px 10px; text-align: left; color: #90b2e1;
+        }
+        .dashboard-table th {
+            background: rgba(78,140,255,0.10); color: #5286e7; font-weight: 600;
+        }
+        .dashboard-table tr:nth-child(even) { background: rgba(255,255,255,0.04); }
+        .dashboard-table tr:hover { background: rgba(78,140,255,0.08); }
+        .footer {
+            width: 100%;
+            text-align: center;
+            color: #b6c6e3;
+            font-size: 1rem;
+            padding: 18px 0 10px 0;
+            background: transparent;
+            margin-top: auto;
+            position: relative;
+            bottom: 0;
+        }
+        /* Modal styles */
+        .modal-bg {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(20,30,50,0.45); z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-bg.active { display: flex; }
+        .modal {
+            background: rgba(255,255,255,0.08);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            border-radius: 22px;
+            padding: 44px 36px 30px 36px;
+            min-width: 320px;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            flex: 1 1 auto;
+            min-height: 12vh;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .modal .close-btn {
+            position: absolute;
+            top: 36px;
+            right: 36px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 1.2rem;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal .close-btn:hover { background: rgba(255,255,255,0.4); }
+        .modal h2 {
+            color: #fff !important;
+            font-weight: 700;
+            margin-bottom: 18px;
+            text-shadow: 0 2px 8px #000a;
+        }
+        .modal label {
+            color: #fff !important;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            text-shadow: 0 1px 4px #0008;
+        }
+        .modal input, .modal select {
+            background: rgba(255,255,255,0.10);
+            border: 1.5px solid rgba(255,255,255,0.22);
+            border-radius: 8px;
+            color: #fff;
+            padding: 12px;
+            margin-bottom: 18px;
+            width: 110%;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .modal input::placeholder {
+            color: #eaf1fb;
+            opacity: 1;
+        }
+        .modal .dashboard-btn {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(31,38,135,0.10);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .modal .dashboard-btn:hover {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            transform: translateY(-2px);
+        }
+        .modal .error-msg {
+            color: #ff4e4e;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        @media (max-width: 1000px) { .dashboard-card { max-width: 98vw; padding: 24px 8px; } }
+        @media (max-width: 600px) { .navbar { padding: 0 10px; } .container { padding-top: 80px; } .dashboard-title { font-size: 1.5rem; } .dashboard-card { min-width: 90vw; max-width: 98vw; padding: 18px 4px; } }
+        /* macOS Glassmorphism Style */
+        .macos-glass {
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 40px 36px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            z-index: 2;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            min-height: auto;
+            overflow: visible;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">ParkingMS</div>
+    <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="feedback.html">Feedback</a></li>
+        <li><button class="login-btn" onclick="window.location.href='Login.html'">Logout</button></li>
+    </ul>
+</nav>
+<section>
+    <div class="dashboard-title">Admin Dashboard</div>
+
+    <div class="dashboard-card macos-glass">
+        <div class="dashboard-actions">
+            <button class="dashboard-btn" id="addUserBtn"><i class="fas fa-user-plus"></i> Add User</button>
+            <button class="dashboard-btn" id="addAdminBtn"><i class="fas fa-user-cog"></i> Add Admin</button>
+        </div>
+        <div class="dashboard-section-title">Users</div>
+        <table class="dashboard-table" id="userTable">
+            <thead>
+            <tr><th>Email</th><th>Role</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="userTableBody">
+            </tbody>
+        </table>
+        <div class="dashboard-section-title">Admins</div>
+        <table class="dashboard-table" id="adminTable">
+            <thead>
+            <tr><th>Email</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="adminTableBody">
+            </tbody>
+        </table>
+        <div class="dashboard-section-title">Fee History</div>
+        <table class="dashboard-table" id="feeTable">
+            <thead>
+            <tr><th>User</th><th>Slot</th><th>Vehicle</th><th>Fee</th><th>Time</th></tr>
+            </thead>
+            <tbody id="feeTableBody"></tbody>
+        </table>
+
+        <div class="dashboard-section-title">Parking Slots</div>
+        <div class="dashboard-actions">
+            <button class="dashboard-btn" id="addSlotBtn"><i class="fas fa-plus"></i> Add Slot</button>
+            <button class="dashboard-btn" id="sortSlotsBtn"><i class="fas fa-sort"></i> Sort Slots</button>
+        </div>
+        <table class="dashboard-table" id="slotTable">
+            <thead>
+            <tr><th>Slot ID</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="slotTableBody">
+            </tbody>
+        </table>
+
+        <div class="dashboard-section-title">Parked Vehicles</div>
+        <table class="dashboard-table" id="vehicleTable">
+            <thead>
+            <tr><th>Type</th><th>Plate Number</th><th>Slot Number</th><th>Details</th></tr>
+            </thead>
+            <tbody id="vehicleTableBody"></tbody>
+        </table>
+
+        <div class="dashboard-section-title">System Analytics</div>
+        <div style="display:flex;gap:30px;flex-wrap:wrap;margin-top:10px;">
+            <div style="background:rgba(78,140,255,0.13);border-radius:12px;padding:18px 32px;min-width:180px;text-align:center;">
+                <div style="font-size:2rem;font-weight:700;color:#4e8cff;" id="totalUsers">0</div>
+                <div style="color:#b6c6e3;">Total Users</div>
+            </div>
+            <div style="background:rgba(78,140,255,0.13);border-radius:12px;padding:18px 32px;min-width:180px;text-align:center;">
+                <div style="font-size:2rem;font-weight:700;color:#4e8cff;" id="totalSlots">45</div>
+                <div style="color:#b6c6e3;">Parking Slots</div>
+            </div>
+            <div style="background:rgba(78,140,255,0.13);border-radius:12px;padding:18px 32px;min-width:180px;text-align:center;">
+                <div style="font-size:2rem;font-weight:700;color:#4e8cff;" id="totalAdmins">0</div>
+                <div style="color:#b6c6e3;">Admins</div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal-bg" id="modalBg">
+    <div class="modal glass-card" id="modalBox">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+    // Modal helpers
+    function showModal(title, content) {
+        document.getElementById('modalContent').innerHTML = `<h2>${title}</h2>${content}`;
+        document.getElementById('modalBg').classList.add('active');
+    }
+    function closeModal() {
+        document.getElementById('modalBg').classList.remove('active');
+    }
+
+    // Fetch and render users
+    async function fetchUsers() {
+        const res = await fetch('http://localhost:8080/parking/admin/user/list');
+        const users = await res.json();
+        const tbody = document.getElementById('userTableBody');
+        tbody.innerHTML = '';
+        users.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${u.email}</td><td>User</td><td><button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ff4e4e,#ff8c8c);' onclick="deleteUser('${u.email}')">Delete</button></td>`;
+            tbody.appendChild(tr);
+        });
+        document.getElementById('totalUsers').textContent = users.length;
+    }
+    // Fetch and render admins
+    async function fetchAdmins() {
+        const res = await fetch('http://localhost:8080/parking/admin/list');
+        const admins = await res.json();
+        const tbody = document.getElementById('adminTableBody');
+        tbody.innerHTML = '';
+        admins.forEach(a => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${a.email}</td><td><button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ff4e4e,#ff8c8c);' onclick="deleteAdmin('${a.email}')">Delete</button></td>`;
+            tbody.appendChild(tr);
+        });
+        document.getElementById('totalAdmins').textContent = admins.length;
+    }
+    // Fetch and render slots
+    async function fetchSlots() {
+        try {
+            const res = await fetch('http://localhost:8080/parking/slots', {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            });
+
+            if (!res.ok) {
+                throw new Error(`Server returned ${res.status}: ${res.statusText}`);
+            }
+
+            const slots = await res.json();
+            const tbody = document.getElementById('slotTableBody');
+            tbody.innerHTML = '';
+
+            if (slots && slots.length > 0) {
+                slots.forEach(slot => {
+                    const status = slot.occupied ? '<span style="color:#e74c3c;">Occupied</span>' : '<span style="color:#27ae60;">Available</span>';
+                    tbody.innerHTML += `<tr><td>${slot.slotId}</td><td>${status}</td><td>
+                            <button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ffd700,#ffb347);color:#233347;' onclick='editSlot(${slot.slotId},${slot.occupied})'>Edit</button>
+                            <button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ff4e4e,#ff8c8c);' onclick='deleteSlot(${slot.slotId})'>Delete</button>
+                        </td></tr>`;
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center">No parking slots available</td></tr>`;
+            }
+
+            document.getElementById('totalSlots').textContent = slots.length;
+            console.log("Parking slots data refreshed:", slots);
+        } catch (error) {
+            console.error('Error fetching parking slots:', error);
+            document.getElementById('slotTableBody').innerHTML =
+                `<tr><td colspan="3" style="text-align: center; color: #ff4e4e;">Error loading slot data. Please try again.</td></tr>`;
+        }
+    }
+
+    // Fetch and render sorted slots
+    async function fetchSortedSlots() {
+        try {
+            const res = await fetch('http://localhost:8080/parking/sort', {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            });
+
+            if (!res.ok) {
+                throw new Error(`Server returned ${res.status}: ${res.statusText}`);
+            }
+
+            const slots = await res.json();
+            const tbody = document.getElementById('slotTableBody');
+            tbody.innerHTML = '';
+
+            if (slots && slots.length > 0) {
+                slots.forEach(slot => {
+                    const status = slot.occupied ? '<span style="color:#e74c3c;">Occupied</span>' : '<span style="color:#27ae60;">Available</span>';
+                    tbody.innerHTML += `<tr><td>${slot.slotId}</td><td>${status}</td><td>
+                            <button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ffd700,#ffb347);color:#233347;' onclick='editSlot(${slot.slotId},${slot.occupied})'>Edit</button>
+                            <button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ff4e4e,#ff8c8c);' onclick='deleteSlot(${slot.slotId})'>Delete</button>
+                        </td></tr>`;
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center">No parking slots available</td></tr>`;
+            }
+
+            console.log("Sorted parking slots:", slots);
+        } catch (error) {
+            console.error('Error fetching sorted slots:', error);
+            document.getElementById('slotTableBody').innerHTML =
+                `<tr><td colspan="3" style="text-align: center; color: #ff4e4e;">Error loading sorted slot data. Please try again.</td></tr>`;
+        }
+    }
+
+    async function fetchParkedVehicles() {
+        try {
+            const res = await fetch('http://localhost:8080/parking/vehicle/parked', {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            });
+            if (!res.ok) throw new Error('Failed to fetch parked vehicles');
+
+            const vehicles = await res.json();
+            const tbody = document.getElementById('vehicleTableBody');
+            tbody.innerHTML = '';
+
+            if (vehicles && vehicles.length > 0) {
+                vehicles.forEach(v => {
+                    const details = v.type === 'Car' ? `Doors: ${v.doors}` :
+                        v.type === 'Motorbike' ? `Sidecar: ${v.hasSidecar ? 'Yes' : 'No'}` : '';
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${v.type}</td>
+                        <td>${v.plateNumber}</td>
+                        <td>${v.slotId || v.slotNumber || 'N/A'}</td>
+                        <td>${details}</td>
+                    </tr>`;
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center">No vehicles currently parked</td></tr>`;
+            }
+        } catch (error) {
+            console.error('Error fetching parked vehicles:', error);
+            document.getElementById('vehicleTableBody').innerHTML =
+                `<tr><td colspan="4" style="text-align: center; color: #ff4e4e;">Error loading vehicle data. Please try again.</td></tr>`;
+        }
+    }
+
+    // Add user/admin modals
+    document.getElementById('addUserBtn').onclick = function() {
+        showModal('Add User', `<form id='addUserForm'><label>Email</label><input type='email' id='userEmail' required><label>Password</label><input type='password' id='userPassword' required><div class='error-msg' id='userError'></div><button type='submit' class='dashboard-btn'>Add User</button></form>`);
+        document.getElementById('addUserForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+            const error = document.getElementById('userError');
+            error.textContent = '';
+            const res = await fetch('http://localhost:8080/parking/user/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (res.ok) {
+                closeModal();
+                fetchUsers();
+            } else {
+                error.textContent = 'Failed to add user.';
+            }
+        };
+    };
+    document.getElementById('addAdminBtn').onclick = function() {
+        showModal('Add Admin', `<form id='addAdminForm'><label>Email</label><input type='email' id='adminEmail' required><label>Password</label><input type='password' id='adminPassword' required><div class='error-msg' id='adminError'></div><button type='submit' class='dashboard-btn'>Add Admin</button></form>`);
+        document.getElementById('addAdminForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const error = document.getElementById('adminError');
+            error.textContent = '';
+            const res = await fetch('http://localhost:8080/parking/admin/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (res.ok) {
+                closeModal();
+                fetchAdmins();
+            } else {
+                error.textContent = 'Failed to add admin.';
+            }
+        };
+    };
+    // Delete user/admin
+    async function deleteUser(email) {
+        if (!confirm('Delete user ' + email + '?')) return;
+        await fetch(`http://localhost:8080/parking/admin/user/delete/${email}`, { method: 'DELETE' });
+        fetchUsers();
+    }
+    async function deleteAdmin(email) {
+        if (!confirm('Delete admin ' + email + '?')) return;
+        await fetch(`http://localhost:8080/parking/admin/delete/${email}`, { method: 'DELETE' });
+        fetchAdmins();
+    }
+    // Add Slot
+    document.getElementById('addSlotBtn').onclick = function() {
+        showModal('Add Parking Slot', `<form id='addSlotForm'><label>Slot ID</label><input type='number' id='slotId' required min='1'><div class='error-msg' id='slotError'></div><button type='submit' class='dashboard-btn'>Add Slot</button></form>`);
+        document.getElementById('addSlotForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const slotId = parseInt(document.getElementById('slotId').value);
+            const error = document.getElementById('slotError');
+            error.textContent = '';
+
+            try {
+                const res = await fetch('http://localhost:8080/parking/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify({ slotId, occupied: false })
+                });
+
+                if (res.ok) {
+                    closeModal();
+                    await fetchSlots();
+                    await fetchParkedVehicles();
+                } else {
+                    const errorData = await res.json().catch(() => null);
+                    error.textContent = errorData?.message || 'Failed to add slot. This ID may already exist.';
+                }
+            } catch (err) {
+                console.error('Error adding slot:', err);
+                error.textContent = 'Network error. Please try again.';
+            }
+        };
+    };
+    // Edit Slot
+    window.editSlot = function(slotId, occupied) {
+        showModal('Edit Parking Slot', `<form id='editSlotForm'><label>Slot ID</label><input type='number' id='editSlotId' value='${slotId}' disabled><label>Status</label><select id='editOccupied'><option value='false' ${!occupied ? 'selected' : ''}>Available</option><option value='true' ${occupied ? 'selected' : ''}>Occupied</option></select><div class='error-msg' id='editSlotError'></div><button type='submit' class='dashboard-btn'>Update Slot</button></form>`);
+        document.getElementById('editSlotForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const newOccupied = document.getElementById('editOccupied').value === 'true';
+            const error = document.getElementById('editSlotError');
+            error.textContent = '';
+
+            try {
+                const res = await fetch(`http://localhost:8080/parking/update/${slotId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify({ slotId, occupied: newOccupied })
+                });
+
+                if (res.ok) {
+                    closeModal();
+                    await fetchSlots();
+                    await fetchParkedVehicles();
+                } else {
+                    const errorData = await res.json().catch(() => null);
+                    error.textContent = errorData?.message || 'Failed to update slot.';
+                }
+            } catch (err) {
+                console.error('Error updating slot:', err);
+                error.textContent = 'Network error. Please try again.';
+            }
+        };
+    };
+    // Delete Slot
+    window.deleteSlot = async function(slotId) {
+        if (!confirm('Delete slot ' + slotId + '?')) return;
+        try {
+            const res = await fetch(`http://localhost:8080/parking/delete/${slotId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            });
+
+            if (res.ok) {
+                await fetchSlots();
+                await fetchParkedVehicles();
+            } else {
+                alert('Failed to delete slot. It might be occupied or referenced by other data.');
+            }
+        } catch (err) {
+            console.error('Error deleting slot:', err);
+            alert('Network error when deleting slot. Please try again.');
+        }
+    };
+    // Sort Slots Button Handler
+    document.getElementById('sortSlotsBtn').onclick = function() {
+        fetchSortedSlots();
+    };
+    // Fetch Fee History
+    async function fetchFeeHistory() {
+        try {
+            const res = await fetch('http://localhost:8080/parking/fee/history');
+            const fees = await res.json();
+            const tbody = document.getElementById('feeTableBody');
+            tbody.innerHTML = '';
+
+            if (fees.length > 0) {
+                fees.forEach(f => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                    <td>${f.email}</td>
+                    <td>${f.slotId}</td>
+                    <td>${f.plateNumber}</td>
+                    <td>LKR ${f.fee}</td>
+                    <td>${f.timestamp}</td>
+                `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center">No fee history available</td></tr>`;
+            }
+        } catch (error) {
+            console.error('Error fetching fee history:', error);
+            document.getElementById('feeTableBody').innerHTML =
+                `<tr><td colspan="5" style="text-align: center; color: #ff4e4e;">Error loading fee history. Please try again.</td></tr>`;
+        }
+    }
+
+    // Initial load
+    fetchUsers();
+    fetchAdmins();
+    fetchSlots();
+    fetchParkedVehicles();
+    fetchFeeHistory();
+
+    // Periodic refresh
+    const refreshInterval = 10000;
+    setInterval(() => {
+        fetchSlots();
+        fetchParkedVehicles();
+        fetchFeeHistory();
+    }, refreshInterval);
+
+    // Modal close handlers
+    document.getElementById('modalBg').onclick = function(e) { if (e.target === this) closeModal(); };
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e8e53f7fca53d4',t:'MTc0NzA0MjIwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
