@@ -11,13 +11,23 @@ public class ParkingFeeCalculator {
 
     double rate;
     if ("Car".equalsIgnoreCase(vehicleType)) {
-        rate = 100.0;
+        if (doors == 4) {
+            rate = 100.0;
+        } else if (doors == 2) {
+            rate = 90.0;
+        } else {
+            rate = 80.0;
+        }
     } else if ("Motorbike".equalsIgnoreCase(vehicleType)) {
-        rate = 50.0;
+        if (hasSidecar) {
+            rate = 60.0;
+        } else {
+            rate = 50.0;
+        }
     } else {
         rate = 40.0;
     }
-    return Math.ceil(hours) * rate;
 
+    return Math.ceil(hours) * rate;
 }
 
