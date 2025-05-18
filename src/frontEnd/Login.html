@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login - Smart Parking Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            background: url('wallpaper.jpg') center center/cover no-repeat fixed, linear-gradient(135deg, #233347cc 0%, #1e2746cc 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            color: #eaf1fb;
+            animation: zoom 30s infinite alternate;
+            justify-content: center;
+        }
+        @keyframes zoom {
+            0% {
+                background-size: 100% 100%;
+            }
+            100% {
+                background-size: 120% 120%;
+            }
+        }
+        .navbar {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            height: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-sizing: border-box;
+            box-shadow: 0 2px 16px 0 rgba(31,38,135,0.10);
+        }
+        .navbar .logo {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar ul li {
+            display: inline-block;
+        }
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        .navbar ul li a.active,
+        .navbar ul li a:hover {
+            color: #4e8cff;
+            background: rgba(255,255,255,0.07);
+        }
+        .navbar .login-btn {
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 6px 22px;
+            background: transparent;
+            color: #fff;
+            font-weight: 500;
+            margin-left: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+        }
+        .login-box {
+            background: rgba(255,255,255,0.08);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            border-radius: 22px;
+            padding: 44px 36px 30px 36px;
+            min-width: 320px;
+            max-width: 370px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            flex: 1 1 auto;
+            min-height: 12vh;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .close-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 1.2rem;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .close-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #eaf1fb;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        .login-form {
+            width: 100%;
+        }
+        .input-group {
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .input-group .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4e8cff;
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: none;
+            background: rgba(255,255,255,0.07);
+            color: #eaf1fb;
+            font-size: 1rem;
+            outline: none;
+            border-radius: 7px;
+            transition: box-shadow 0.2s, border 0.2s;
+            z-index: 1;
+        }
+        .input-group input:focus {
+            box-shadow: 0 0 0 2px #4e8cff33;
+            background: rgba(255,255,255,0.13);
+        }
+        .options-row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            font-size: 0.97rem;
+        }
+        .options-row label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #eaf1fb;
+            cursor: pointer;
+            font-size: 0.97rem;
+        }
+        .options-row input[type="checkbox"] {
+            accent-color: #4e8cff;
+            width: 16px;
+            height: 16px;
+        }
+        .options-row a {
+            color: #4e8cff;
+            text-decoration: none;
+            font-size: 0.97rem;
+            transition: text-decoration 0.2s;
+        }
+        .options-row a:hover {
+            text-decoration: underline;
+        }
+        .login-btn-main {
+            width: 100%;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(31,38,135,0.10);
+        }
+        .login-btn-main:hover {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 8px;
+            color: #eaf1fb;
+            font-size: 0.98rem;
+        }
+        .register-link a {
+            color: #4e8cff;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            color: #b6c6e3;
+            font-size: 1rem;
+            padding: 18px 0 10px 0;
+            margin-top: 30px;
+            background: transparent;
+        }
+        @media (max-width: 600px) {
+            .navbar { padding: 0 10px; }
+            .container { padding-top: 80px; }
+            .login-box { min-width: 90vw; max-width: 98vw; padding: 24px 8px; }
+        }
+        .page-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: pageFadeIn 0.7s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        @keyframes pageFadeIn {
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">ParkingMS</div>
+    <ul>
+        <li><a href="home.html" class="active">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="feedback.html">Feedback</a></li>
+        <li><button class="login-btn" onclick="window.location.href='Login.html'">Login</button></li>
+    </ul>
+</nav>
+
+</nav>
+<section>
+    <div class="login-box">
+        <button class="close-btn" onclick="window.location.href='home.html'">&times;</button>
+        <div class="login-title">Login</div>
+        <form class="login-form">
+            <div class="input-group">
+                <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                <input type="email" id="email" name="email" placeholder="Email" required />
+            </div>
+            <div class="input-group">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input type="password" id="password" name="password" placeholder="Password" required />
+            </div>
+            <div class="options-row">
+                <label><input type="checkbox" id="rememberMe"> Remember me</label>
+                <a href="#">Forgot Password?</a>
+            </div>
+            <button type="submit" class="login-btn-main">Login</button>
+        </form>
+        <div class="register-link">
+            Don't have an account? <a href="register.html">Register</a>
+        </div>
+    </div>
+</section>
+<script>
+    document.querySelector('.login-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Try admin login first
+        let response = await fetch('http://localhost:8080/parking/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            localStorage.setItem('adminLoggedIn', 'true');
+            localStorage.setItem('currentUserEmail', email);
+            window.location.href = 'admin_view.html';
+            return;
+        }
+
+        // If admin login fails, try user login
+        response = await fetch('http://localhost:8080/parking/user/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            localStorage.setItem('userLoggedIn', 'true');
+            localStorage.setItem('currentUserEmail', email);
+            window.location.href = 'user_view.html';
+        } else {
+            alert('Invalid email or password');
+        }
+    });
+</script>
+</body>
+</html>
