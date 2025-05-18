@@ -114,7 +114,6 @@
         .modal-bg {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(20,30,50,0.45); z-index: 1000; align-items: center; justify-content: center;
-            backdrop-filter: blur(16px);
         }
         .modal-bg.active { display: flex; }
         .modal {
@@ -131,15 +130,20 @@
         .modal p { color: #eaf1fb; margin-bottom: 10px; }
         .modal .user-btn { margin-top: 10px; width: 100%; }
         .modal input, .modal select {
-            background: rgba(255,255,255,0.10);
+            background: #232b3a;
             border: 1.5px solid rgba(255,255,255,0.22);
             border-radius: 8px;
-            color: #fff;
+            color: #eaf1fb;
             padding: 12px;
             margin-bottom: 18px;
             width: 100%;
             font-size: 1rem;
             box-sizing: border-box;
+        }
+        /* Dark dropdown options */
+        .modal select option {
+            background: #232b3a;
+            color: #eaf1fb;
         }
         .modal label {
             display: block;
