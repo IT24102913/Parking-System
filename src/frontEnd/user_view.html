@@ -117,6 +117,8 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s cubic-bezier(.4,0,.2,1);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
 
         }
         .modal-bg.active { display: flex;
@@ -387,10 +389,11 @@
 <nav class="navbar">
     <div class="logo">ParkingMS</div>
     <ul>
-        <li><a href="home.html">Home</a></li>
+        <li><a href="home.html" class="active">Home</a></li>
         <li><a href="services.html">Services</a></li>
         <li><a href="contact.html">Contact</a></li>
-        <li><button class="login-btn" onclick="logout()">Logout</button></li>
+        <li><a href="feedback.html">Feedback</a></li>
+        <li><button class="login-btn" onclick="window.location.href='Login.html'">Login</button></li>
     </ul>
 </nav>
 <div class="dashboard" id="dashboard">
@@ -624,7 +627,7 @@
                 <div class='error-msg' id='profileError'></div>
                 <button type='submit' class='user-btn profile-btn'>Update Password</button>
             </form>`;
-        showModal('<br> <center> Profile Settings', html);
+        showModal('<br> <center> <p></p>', html);
         slideDashboardLeft();
         document.getElementById('profileForm').onsubmit = async function(e) {
             e.preventDefault();
