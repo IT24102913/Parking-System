@@ -114,17 +114,31 @@
         .modal-bg {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(20,30,50,0.45); z-index: 1000; align-items: center; justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(.4,0,.2,1);
+
         }
-        .modal-bg.active { display: flex; }
+        .modal-bg.active { display: flex;
+            opacity: 1;
+            pointer-events: auto;
+        }
         .modal {
             background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
             box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
             border-radius: 18px; padding: 36px 32px; min-width: 300px; max-width: 90vw;
             color: #233347; position: relative; backdrop-filter: blur(25px);
+            transform: translateY(40px) scale(0.98);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.35s cubic-bezier(.4,0,.2,1);
+
         }
         .modal .close-btn {
             position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 1.2rem; color: #233347; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center;
-        }
+        }.modal.active {
+             transform: translateY(0) scale(1);
+             opacity: 1;
+         }
         .modal .close-btn:hover { background: rgba(255,255,255,0.4); }
         .modal h2 { color: #eaf1fb; margin-bottom: 18px; font-size: 1.3rem; }
         .modal p { color: #eaf1fb; margin-bottom: 10px; }
@@ -242,6 +256,72 @@
             align-items: center;
             gap: 16px;
         }
+        /* Custom styled checkbox for Has Sidecar */
+        .custom-checkbox-row {
+            display: flex;
+            margin-left: 72px;
+            margin-top: 8px;
+
+            width: 100%;
+        }
+        .custom-checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #eaf1fb;
+            position: relative;
+            padding-left: 32px;
+            user-select: none;
+        }
+        .custom-checkbox {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .checkmark {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 20px;
+            width: 20px;
+            background-color: #232b3a;
+            border: 2px solid #4e8cff;
+            border-radius: 6px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .custom-checkbox:checked ~ .checkmark {
+            background-color: #4e8cff;
+            border-color: #40cab7;
+        }
+        .checkmark:after {
+            content: '';
+            position: absolute;
+            display: none;
+        }
+        .custom-checkbox:checked ~ .checkmark:after {
+            display: block;
+        }
+        .custom-checkbox-label .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 6px;
+            height: 12px;
+            border: solid #fff;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+            content: '';
+            position: absolute;
+        }
+        #bikeFields {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
@@ -347,8 +427,13 @@
                     <input type="number" id="doors" min="2" max="4" step="2" value="4" oninput="validateDoors(this)">
                 </div>
                 <div id="bikeFields" style="display:none;">
-                    <label>Has Sidecar</label>
-                    <input type="checkbox" id="hasSidecar">
+                    <div class="custom-checkbox-row">
+                      <label for="hasSidecar" class="custom-checkbox-label">
+                        <input type="checkbox" id="hasSidecar" class="custom-checkbox">
+                        <span class="checkmark"></span>
+                        Has Sidecar
+                      </label>
+                    </div>
                 </div>
             </div>`;
         let slotsHtml = '<div style="max-height:200px;overflow:auto;margin-top:15px;">';
