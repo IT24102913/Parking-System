@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>User Dashboard - Smart Parking Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body {
+            min-height: 100vh;
+            background: url('wallpaper.jpg') center center/cover no-repeat fixed, linear-gradient(135deg, #233347cc 0%, #1e2746cc 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            color: #eaf1fb;
+            animation: zoom 30s infinite alternate;
+        }
+        @keyframes zoom {
+            0% {
+                background-size: 100% 100%;
+            }
+            100% {
+                background-size: 120% 120%;
+            }
+        }
+        .navbar {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            color: #fff;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 60px; height: 70px; position: fixed; top: 0; left: 0; z-index: 10; box-sizing: border-box;
+            box-shadow: 0 2px 16px 0 rgba(31,38,135,0.10);
+        }
+        .navbar .logo { font-size: 1.7rem; font-weight: 700; letter-spacing: 1px; }
+        .navbar ul { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+        .navbar ul li { display: inline-block; }
+        .navbar ul li a { color: #fff; text-decoration: none; font-weight: 500; font-size: 1rem; transition: color 0.2s; padding: 8px 16px; border-radius: 8px; }
+        .navbar ul li a.active, .navbar ul li a:hover { color: #4e8cff; background: rgba(255,255,255,0.07); }
+        .navbar .login-btn { border: 2px solid #fff; border-radius: 8px; padding: 6px 22px; background: transparent; color: #fff; font-weight: 500; margin-left: 20px; transition: all 0.2s; cursor: pointer; }
+
+
+        .navbar .login-btn {
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 6px 22px;
+            background: transparent;
+            color: #fff;
+            font-weight: 500;
+            margin-left: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        section {
+            flex: 1 1 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 130px;
+            padding-bottom: 40px;
+            box-sizing: border-box;
+        }
+        .user-title {
+            font-size: 2.3rem; font-weight: 700; color: #eaf1fb; margin-bottom: 18px; text-align: left;
+        }
+        .user-desc {
+            font-size: 1.1rem; color: #b6c6e3; margin-bottom: 32px; text-align: left;
+        }
+        .user-card {
+            background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+            border-radius: 18px; padding: 36px 32px; min-width: 320px; max-width: 900px;
+            width: 100%; margin: 0 auto 30px auto; display: flex; flex-direction: column; align-items: flex-start; transition: box-shadow 0.2s, transform 0.2s;
+            backdrop-filter: blur(25px);
+        }
+        .user-actions {
+            display: flex; gap: 18px; margin-bottom: 24px; flex-wrap: wrap;
+        }
+        .user-btn {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: #fff; border: none; border-radius: 8px; padding: 10px 28px;
+            font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(31,38,135,0.10);
+        }
+        .user-btn:hover { background: linear-gradient(90deg, #00d2ff, #3a7bd5); }
+        .user-section-title {
+            font-size: 1.2rem; color: #4e8cff; margin-bottom: 10px; margin-top: 18px;
+        }
+        .user-table {
+            width: 100%; border-collapse: collapse; margin-bottom: 18px; background: transparent;
+        }
+        .user-table th, .user-table td {
+            padding: 12px 10px; text-align: left; color: #eaf1fb;
+        }
+        .user-table th {
+            background: rgba(78,140,255,0.10); color: #4e8cff; font-weight: 600;
+        }
+        .user-table tr:nth-child(even) { background: rgba(255,255,255,0.04); }
+        .user-table tr:hover { background: rgba(78,140,255,0.08); }
+        .footer {
+            width: 100%;
+            text-align: center;
+            color: #b6c6e3;
+            font-size: 1rem;
+            padding: 18px 0 10px 0;
+            background: transparent;
+            margin-top: auto;
+            position: relative;
+            bottom: 0;
+        }
+        /* Modal styles */
+        .modal-bg {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(20,30,50,0.45); z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-bg.active { display: flex; }
+        .modal {
+            background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            border-radius: 18px; padding: 36px 32px; min-width: 300px; max-width: 90vw;
+            color: #233347; position: relative; backdrop-filter: blur(25px);
+        }
+        .modal .close-btn {
+            position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 1.2rem; color: #233347; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .modal .close-btn:hover { background: rgba(255,255,255,0.4); }
+        .modal h2 { color: #eaf1fb; margin-bottom: 18px; font-size: 1.3rem; }
+        .modal p { color: #eaf1fb; margin-bottom: 10px; }
+        .modal .user-btn { margin-top: 10px; width: 100%; }
+        .modal input, .modal select {
+            background: rgba(255,255,255,0.10);
+            border: 1.5px solid rgba(255,255,255,0.22);
+            border-radius: 8px;
+            color: #fff;
+            padding: 12px;
+            margin-bottom: 18px;
+            width: 100%;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .modal label {
+            display: block;
+            margin-bottom: 5px;
+            color: #b6c6e3;
+            font-weight: 500;
+        }
+        .modal .error-msg {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .modal #carFields, .modal #bikeFields {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        /* Vehicle table styles */
+        .vehicle-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .vehicle-car {
+            background: rgba(78,140,255,0.2);
+            color: #4e8cff;
+        }
+        .vehicle-motorbike {
+            background: rgba(240,185,11,0.2);
+            color: #f0b90b;
+        }
+        @media (max-width: 1000px) { .user-card { max-width: 98vw; padding: 24px 8px; } }
+        @media (max-width: 600px) { .navbar { padding: 0 10px; } .container { padding-top: 80px; } .user-title { font-size: 1.5rem; } .user-card { min-width: 90vw; max-width: 98vw; padding: 18px 4px; } }
+        .page-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: pageFadeIn 0.7s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        @keyframes pageFadeIn {
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        /* MacOS Glassmorphism Style */
+        .macos-glass {
+            background: rgba(255,255,255,0.35);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">ParkingMS</div>
+    <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><button class="login-btn" onclick="logout()">Logout</button></li>
+    </ul>
+</nav>
+<div class="dashboard" id="dashboard">
+    <section>
+
+    <div class="user-title">User Dashboard</div>
+    <div class="user-desc">Welcome! Here you can view your parking status, history, and manage your profile.</div>
+    <div class="user-card">
+        <div class="user-actions">
+            <button class="user-btn" id="findParkingBtn"><i class="fas fa-parking"></i> Find Parking</button>
+            <button class="user-btn secondary" id="profileBtn"><i class="fas fa-user"></i> Profile</button>
+        </div>
+        <div class="user-section-title">Current Parking Status</div>
+        <table class="user-table" id="currentParkingTable">
+            <thead>
+            <tr><th>Slot</th><th>Vehicle</th><th>Status</th><th>Entry Time</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+            <!-- Populated dynamically -->
+            </tbody>
+        </table>
+        <div class="user-section-title">Your Parking Transactions</div>
+        <table class="user-table" id="transactionsTable">
+            <thead>
+            <tr><th>Vehicle</th><th>Plate Number</th><th>Fee (LKR)</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+            <!-- Transactions will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+</section>
+</div>
+<div class="modal-bg" id="modalBg">
+    <div class="modal" id="modalBox">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
+    if (!currentUserEmail || !localStorage.getItem('userLoggedIn')) {
+        alert('Please log in to access the dashboard.');
+        window.location.href = 'Login.html';
+    }
+
+    function logout() {
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('currentUserEmail');
+        window.location.href = 'Login.html';
+    }
+
+    function showModal(title, content) {
+        const modalBox = document.getElementById('modalBox');
+        document.getElementById('modalContent').innerHTML = `<h2>${title}</h2>${content}`;
+        document.getElementById('modalBg').classList.add('active');
+        modalBox.classList.add('active');
+    }
+
+    function slideDashboardLeft() {
+        document.getElementById('dashboard').classList.add('shifted');
+    }
+
+    function closeModal() {
+        document.getElementById('modalBox').classList.remove('active');
+        document.getElementById('modalBg').classList.remove('active');
+        document.getElementById('dashboard').classList.remove('shifted');
+    }
+
+    document.getElementById('findParkingBtn').onclick = async function() {
+        const slotsRes = await fetch(`http://localhost:8080/parking/slots?_=${Date.now()}`, {
+            cache: 'no-cache',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            }
+        });
+        const slots = await slotsRes.json();
+
+        const vehicleFields = `
+            <div id="newVehicleFields">
+                <label>Vehicle Type</label>
+                <select id="vehicleType" required onchange="toggleVehicleFields()">
+                    <option value="">Select type</option>
+                    <option value="Car">Car</option>
+                    <option value="Motorbike">Motorbike</option>
+                </select>
+                <label>Plate Number</label>
+                <input type="text" id="plateNumber" required placeholder="ABC-1234" style="width: 93%;">
+                <div id="carFields" style="display:none;">
+                    <label>Number of Doors</label>
+                    <input type="number" id="doors" min="2" max="4" step="2" value="4" oninput="validateDoors(this)" style="width: 93%;">
+                </div>
+                <div id="bikeFields" style="display:none;">
+                    <label>Has Sidecar</label>
+                    <input type="checkbox" id="hasSidecar">
+                </div>
+            </div>`;
+        let slotsHtml = '<div style="max-height:200px;overflow:auto;margin-top:15px;">';
+        let availableSlots = slots.filter(slot => !slot.occupied);
+        if (availableSlots.length === 0) {
+            slotsHtml = '<p style="color:#eaf1fb;text-align:center;">No available slots at this time.</p>';
+        } else {
+            availableSlots.forEach(slot => {
+                slotsHtml += `
+                    <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px;'>
+                        <div>
+                            <span style='font-weight:600;'>Slot ${slot.slotId}</span>
+                            <span class="status-badge status-available">Available</span>
+                        </div>
+                        <button class='user-btn' style='padding:4px 14px;font-size:0.95rem;' onclick='reserveSlotWithVehicle(${slot.slotId})'>Reserve</button>
+                    </div>`;
+            });
+            slotsHtml += '</div>';
+        }
+
+        let html = `
+            <form id="reservationForm">
+                ${vehicleFields}
+                <div class="error-msg" id="reservationError"></div>
+                <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:20px 0;">
+                <h3 style="color:#4e8cff;margin-bottom:10px;">Available Slots</h3>
+                ${slotsHtml}
+            </form>
+        `;
+
+        showModal('Find Parking', html);
+        slideDashboardLeft();
+    };
+
+    window.validateDoors = function(input) {
+        const value = parseInt(input.value);
+        if (value !== 2 && value !== 4) {
+            input.value = 4; // Reset to default if invalid value entered
+        }
+    };
+
+    window.toggleVehicleFields = function() {
+        const type = document.getElementById('vehicleType').value;
+        const carFields = document.getElementById('carFields');
+        const bikeFields = document.getElementById('bikeFields');
+        if (carFields && bikeFields) {
+            carFields.style.display = type === 'Car' ? 'block' : 'none';
+            bikeFields.style.display = type === 'Motorbike' ? 'block' : 'none';
+        }
+    };
+
+    window.reserveSlotWithVehicle = async function(slotId) {
+        const error = document.getElementById('reservationError');
+        error.textContent = '';
+
+        const type = document.getElementById('vehicleType').value;
+        const plateNumber = document.getElementById('plateNumber').value;
+
+        if (!type) {
+            error.textContent = 'Please select a vehicle type';
+            return;
+        }
+
+        if (!plateNumber) {
+            error.textContent = 'Please enter a plate number';
+            return;
+        }
+
+        const vehicleData = {
+            type: type,
+            plateNumber: plateNumber,
+            email: currentUserEmail
+        };
+
+        if (type === 'Car') {
+            vehicleData.doors = document.getElementById('doors').value;
+        } else if (type === 'Motorbike') {
+            vehicleData.hasSidecar = document.getElementById('hasSidecar').checked;
+        }
+
+        try {
+            const registerRes = await fetch('http://localhost:8080/parking/vehicle/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(vehicleData)
+            });
+
+            if (!registerRes.ok) {
+                const errorData = await registerRes.json();
+                error.textContent = errorData.message || 'Failed to register vehicle';
+                return;
+            }
+
+            const reserveRes = await fetch('http://localhost:8080/parking/reserve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: currentUserEmail,
+                    slotId: slotId,
+                    plateNumber: plateNumber,
+                    vehicleType: type  // Ensure vehicle type is sent with reservation
+                })
+            });
+
+            if (reserveRes.ok) {
+                closeModal();
+                renderCurrentParking();
+                loadTransactions();
+                alert('Slot reserved successfully!');
+            } else {
+                const errorData = await reserveRes.json();
+                error.textContent = errorData.message || 'Failed to reserve slot';
+            }
+        } catch (err) {
+            error.textContent = 'Network error. Please try again.';
+        }
+    };
+
+    document.getElementById('profileBtn').onclick = async function() {
+        const res = await fetch(`http://localhost:8080/parking/user/profile/${currentUserEmail}`);
+        const profile = await res.json();
+        let html = `
+            <form id='profileForm'>
+            <br>
+                <label>Email</label>
+                <input type='email' value='${profile.email || ''}' disabled style="width: 93%">
+                <br>
+                <br>
+                <label>New Password</label>
+                <input type='password' id='profilePassword' required placeholder="Enter new password" style="width: 93%">
+                <div class='error-msg' id='profileError'></div>
+                <br>
+                <button type='submit' class='user-btn'>Update Password</button>
+                <br>
+                <br>
+                <br>
+                <div class="profileupdate">
+                <p style="color: #ff4e4e"><center>Note: </center></p>
+                <p style="color: #ff4e4e"> <center>Your Profile will be updated</center></p>
+                </div>
+            </form>`;
+        showModal('<br> <center> Profile Settings', html);
+        slideDashboardLeft();
+        document.getElementById('profileForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const password = document.getElementById('profilePassword').value;
+            const error = document.getElementById('profileError');
+            error.textContent = '';
+
+            if (password.length < 6) {
+                error.textContent = 'Password must be at least 6 characters';
+                return;
+            }
+
+            const res2 = await fetch('http://localhost:8080/parking/user/profile/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: currentUserEmail, password })
+            });
+            if (res2.ok) {
+                closeModal();
+                alert('Profile updated successfully!');
+            } else {
+                error.textContent = 'Failed to update profile. Please try again.';
+            }
+        };
+    };
+
+    async function renderCurrentParking() {
+        try {
+            // Get parking history
+            const historyRes = await fetch(`http://localhost:8080/parking/history/${currentUserEmail}`);
+            const history = await historyRes.json();
+
+            // Get all registered vehicles
+            const vehiclesRes = await fetch(`http://localhost:8080/parking/vehicle/list?email=${currentUserEmail}`);
+            const vehicles = await vehiclesRes.json();
+
+            // Find all active reservations
+            const activeReservations = history.filter(record => record.exitTime === '-');
+
+            const tbody = document.querySelector('#currentParkingTable tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            if (activeReservations.length > 0) {
+                for (const reservation of activeReservations) {
+                    // Find vehicle details for this reservation
+                    const vehicle = vehicles.find(v => v.plateNumber === reservation.plateNumber);
+                    const vehicleType = vehicle ? vehicle.type : reservation.vehicleType || 'Unknown';
+
+                    const entryTime = new Date(parseInt(reservation.entryTime));
+                    const entryTimeStr = entryTime.toLocaleString();
+
+                    // Create appropriate badge based on vehicle type
+                    const vehicleBadge = vehicleType === 'Car' ?
+                        '<span class="vehicle-badge vehicle-car"><i class="fas fa-car"></i> Car</span>' :
+                        '<span class="vehicle-badge vehicle-motorbike"><i class="fas fa-motorcycle"></i> Motorbike</span>';
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${reservation.slotId}</td>
+                        <td>${vehicleBadge} ${reservation.plateNumber}</td>
+                        <td><span class="status-badge status-occupied">Occupied</span></td>
+                        <td>${entryTimeStr}</td>
+                        <td><button class='user-btn danger' style='padding:4px 14px;font-size:0.95rem;'
+                            onclick='showLeaveModal(${reservation.slotId}, "${reservation.plateNumber}")'>Leave</button></td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            } else {
+                tbody.innerHTML = `<tr><td colspan='5' style='text-align:center;'>No active parking.</td></tr>`;
+            }
+        } catch (err) {
+            console.error('Error rendering parking status:', err);
+            document.querySelector('#currentParkingTable tbody').innerHTML =
+                `<tr><td colspan='5' style='text-align:center;color:#ff6b6b;'>Error loading parking status.</td></tr>`;
+        }
+    }
+
+    function showLeaveModal(slotId, plateNumber) {
+        showModal('Leave Parking', `
+            <p>Are you sure you want to leave slot ${slotId} (Vehicle: ${plateNumber})?</p>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class='user-btn secondary' onclick='closeModal()'>Cancel</button>
+                <button class='user-btn danger' onclick='leaveSlot(${slotId}, "${plateNumber}")'>Confirm Leave</button>
+            </div>
+        `);
+    }
+
+    window.leaveSlot = async function(slotId, plateNumber) {
+        try {
+            const res = await fetch('http://localhost:8080/parking/leave', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: currentUserEmail,
+                    slotId: slotId,
+                    plateNumber: plateNumber
+                })
+            });
+            if (res.ok) {
+                const result = await res.json();
+                closeModal();
+                renderCurrentParking();
+                loadTransactions();
+                alert(`You have left the slot. Fee: LKR ${result.fee.toFixed(2)}`);
+            } else {
+                alert('Failed to leave slot. Please try again.');
+            }
+        } catch (err) {
+            alert('Network error. Please try again.');
+        }
+    };
+
+    async function loadTransactions() {
+        try {
+            const feesRes = await fetch('http://localhost:8080/parking/fee/history');
+            const allFees = await feesRes.json();
+            const userFees = allFees.filter(fee => fee.email === currentUserEmail);
+
+            const vehiclesRes = await fetch(`http://localhost:8080/parking/vehicle/list?email=${currentUserEmail}`);
+            const allVehicles = await vehiclesRes.json();
+
+            const tbody = document.querySelector('#transactionsTable tbody');
+            tbody.innerHTML = '';
+
+            if (userFees.length === 0) {
+                tbody.innerHTML = `<tr><td colspan='4' style='text-align:center;'>No parking transactions found.</td></tr>`;
+                return;
+            }
+
+            userFees.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            for (const fee of userFees) {
+                const vehicle = allVehicles.find(v => v.plateNumber === fee.plateNumber) || {};
+                const vehicleType = vehicle.type || fee.vehicleType || 'Unknown';
+
+                const typeBadge = vehicleType === 'Car' ?
+                    '<span class="vehicle-badge vehicle-car"><i class="fas fa-car"></i> Car</span>' :
+                    '<span class="vehicle-badge vehicle-motorbike"><i class="fas fa-motorcycle"></i> Motorbike</span>';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${typeBadge}</td>
+                    <td>${fee.plateNumber}</td>
+                    <td>LKR ${parseFloat(fee.fee).toFixed(2)}</td>
+                    <td>${new Date(fee.timestamp).toLocaleString()}</td>
+                `;
+                tbody.appendChild(row);
+            }
+        } catch (err) {
+            console.error('Error loading transactions:', err);
+            document.querySelector('#transactionsTable tbody').innerHTML =
+                `<tr><td colspan='4' style='text-align:center;color:#ff6b6b;'>Error loading transactions.</td></tr>`;
+        }
+    }
+
+    // Initial load
+    renderCurrentParking();
+    loadTransactions();
+
+    // Modal close handlers
+    document.getElementById('modalBg').onclick = function(e) {
+        if (e.target === this) closeModal();
+    };
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+</script>
+
+</body>
+</html>
