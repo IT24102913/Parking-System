@@ -9,11 +9,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class FeedbackService {
 
-    private final File file = new File("feed.txt");
+    private final File file = new File("feedback_data.txt");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public List<Feedback> getAllFeedbacks() {
@@ -35,15 +38,20 @@ public class FeedbackService {
     }
 
     public void addFeedback(Feedback feedback) {
+        feedback.setId(UUID.randomUUID().toString());
+        feedback.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        if (feedback.getStatus() == null || feedback.getStatus().isEmpty()) {
+            feedback.setStatus("Pending");
+        }
         List<Feedback> feedbacks = getAllFeedbacks();
         feedbacks.add(feedback);
         writeToFile(feedbacks);
     }
 
-    public boolean updateFeedback(String vehicleId, Feedback newFeedback) {
+    public boolean updateFeedback(String id, Feedback newFeedback) {
         List<Feedback> feedbacks = getAllFeedbacks();
         for (int i = 0; i < feedbacks.size(); i++) {
-            if (feedbacks.get(i).getVehicleId().equals(vehicleId)) {
+            if (feedbacks.get(i).getId().equals(id)) {
                 feedbacks.set(i, newFeedback);
                 writeToFile(feedbacks);
                 return true;
@@ -52,9 +60,9 @@ public class FeedbackService {
         return false;
     }
 
-    public boolean deleteFeedback(String vehicleId) {
+    public boolean deleteFeedback(String id) {
         List<Feedback> feedbacks = getAllFeedbacks();
-        boolean removed = feedbacks.removeIf(f -> f.getVehicleId().equals(vehicleId));
+        boolean removed = feedbacks.removeIf(f -> id.equals(f.getId()));
         if (removed) {
             writeToFile(feedbacks);
         }
