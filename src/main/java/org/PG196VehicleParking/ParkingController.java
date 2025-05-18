@@ -362,5 +362,111 @@ public class ParkingController {
         }
         return fees;
     }
+    // ==========  HELPER METHODS ========== //
+
+    private Map<String, String> findParkingEntry(String email, int slotId) {
+        List<Map<String, String>> history = readAllHistory();
+        for (Map<String, String> entry : history) {
+            if (entry.get("email").equals(email) &&
+                    Integer.parseInt(entry.get("slotId")) == slotId &&
+                    entry.get("exitTime").equals("-")) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
+    private Map<String, String> findVehicleByPlate(String plateNumber) {
+        List<Map<String, String>> vehicles = listVehicles();
+        for (Map<String, String> vehicle : vehicles) {
+            if (vehicle.get("plateNumber").equals(plateNumber)) {
+                return vehicle;
+            }
+        }
+        return null;
+    }
+
+    private void recordFeeTransaction(String email, int slotId, String plateNumber, double fee) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FEE_HISTORY_FILE, true))) {
+            writer.write(String.format("%s,%d,%s,%.2f,%tF %<tT",
+                    email, slotId, plateNumber, fee, new Date()));
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateHistoryExit(String email, int slotId, Date exit, double fee) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(HISTORY_FILE))) {
+            String line;
+            boolean updated = false;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (!updated && parts[0].equals(email) &&
+                        Integer.parseInt(parts[1]) == slotId &&
+                        parts[3].equals("-")) {
+                    String plateNumber = parts.length > 4 ? parts[4] : "";
+                    line = parts[0] + "," + parts[1] + "," + parts[2] + "," +
+                            exit.getTime() + "," + String.format("%.2f", fee) +
+                            (plateNumber.isEmpty() ? "" : "," + plateNumber);
+                    updated = true;
+                }
+                lines.add(line);
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(HISTORY_FILE))) {
+            for (String l : lines) {
+                writer.write(l);
+                writer.newLine();
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    private List<Map<String, String>> readHistory(String email) {
+        List<Map<String, String>> history = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(HISTORY_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts[0].equals(email)) {
+                    Map<String, String> entry = new HashMap<>();
+                    entry.put("slotId", parts[1]);
+                    entry.put("entryTime", parts[2]);
+                    entry.put("exitTime", parts[3]);
+                    if (parts.length > 4) {
+                        entry.put("plateNumber", parts[4]);
+                    }
+                    history.add(entry);
+                }
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+        return history;
+    }
+
+    private List<Map<String, String>> readAllHistory() {
+        List<Map<String, String>> history = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(HISTORY_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 4) {
+                    Map<String, String> entry = new HashMap<>();
+                    entry.put("email", parts[0]);
+                    entry.put("slotId", parts[1]);
+                    entry.put("entryTime", parts[2]);
+                    entry.put("exitTime", parts[3]);
+                    if (parts.length > 4) {
+                        entry.put("plateNumber", parts[4]);
+                    }
+                    history.add(entry);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return history;
+    }
 
 }
