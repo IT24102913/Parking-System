@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact - Smart Parking Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --glass-bg: rgba(226, 231, 236, 0.55);
+      --glass-border: rgba(255,255,255,0.18);
+      --text-color: #eaf1fb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-color);
+      background: url('wallpaper.jpg') center/cover no-repeat fixed, linear-gradient(135deg, rgba(240, 240, 240, 0.8), rgba(230, 230, 230, 0.8));
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      height: 70px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .navbar .logo {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: color 0.2s;
+    }
+
+    .navbar ul li a.active,
+    .navbar ul li a:hover {
+      color: #4e8cff;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .navbar .login-btn {
+      border: 2px solid #fff;
+      border-radius: 8px;
+      padding: 6px 22px;
+      background: transparent;
+      color: #fff;
+      font-weight: 500;
+      margin-left: 20px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .container {
+      padding-top: 100px;
+      padding-bottom: 40px;
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .contact-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .contact-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .contact-header p {
+      font-size: 1.1rem;
+      color: #b6c6e3;
+    }
+
+    .contact-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: space-between;
+    }
+
+    .contact-info, .contact-form {
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2);
+      flex: 1 1 45%;
+      min-width: 300px;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+    }
+
+    .contact-info h2,
+    .contact-form h2 {
+      margin-bottom: 20px;
+      color: #4e8cff;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .info-icon {
+      font-size: 1.5rem;
+      margin-right: 15px;
+      color: #4e8cff;
+    }
+
+    .info-content h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .info-content p {
+      margin: 5px 0 0;
+      font-size: 0.95rem;
+      color: #b6c6e3;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-color);
+    }
+
+    .form-group textarea {
+      height: 120px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      background: linear-gradient(to right, #3a7bd5, #00d2ff);
+      border: none;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(to right, #00d2ff, #3a7bd5);
+    }
+
+    .map-section {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .map-section h2 {
+      margin-bottom: 20px;
+    }
+
+    .map-container {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(31,38,135,0.2);
+      height: 460px;
+      width: 100%;
+
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #b6c6e3;
+      font-size: 0.95rem;
+      margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+      .contact-content {
+        flex-direction: column;
+      }
+
+      .contact-info, .contact-form {
+        flex: 1 1 100%;
+      }
+
+      .navbar {
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">ParkingMS</div>
+  <ul>
+    <li><a href="home.html" class="active">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><button class="login-btn" onclick="window.location.href='Login.html'">Login</button></li>
+  </ul>
+</nav>
+
+
+<div class="container">
+  <div class="contact-header">
+    <h1>Contact Us</h1>
+    <p>Get in touch with our team for any questions or support you may need</p>
+  </div>
+
+  <div class="contact-content">
+    <div class="contact-info">
+      <h2>Contact Information</h2>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="info-content">
+          <h3>Address</h3>
+          <p>123 Parking Street, City Center, Colombo, Sri Lanka</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-phone"></i></div>
+        <div class="info-content">
+          <h3>Phone</h3>
+          <p>+94 11 234 5678</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-envelope"></i></div>
+        <div class="info-content">
+          <h3>Email</h3>
+          <p>info@parkingms.com</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-clock"></i></div>
+        <div class="info-content">
+          <h3>Working Hours</h3>a
+          <p>Mon–Fri: 9:00 AM – 6:00 PM<br>Sat: 9:00 AM – 1:00 PM</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h2>Send us a Message</h2>
+      <form>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Your Message</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Submit</button>
+      </form>
+    </div>
+  </div>
+<section>
+  <div class="map-section">
+    <h2>Find Us Here</h2>
+    <div class="map-container">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18..."></iframe>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2025 ParkingMS. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
