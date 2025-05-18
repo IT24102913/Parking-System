@@ -200,6 +200,48 @@
             -webkit-backdrop-filter: blur(30px) saturate(180%);
             border: 1px solid rgba(255,255,255,0.4);
         }
+        /* Slot card styling */
+        .available-slot-card {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        .slot-info {
+            color: #4e8cff;
+            font-weight: 600;
+            font-size: 1.08rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #40cab7;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 2px 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .slot-title {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #4e8cff;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .slot-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
     </style>
 </head>
 <body>
@@ -316,12 +358,12 @@
         } else {
             availableSlots.forEach(slot => {
                 slotsHtml += `
-                    <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px;'>
-                        <div>
-                            <span style='font-weight:600;'>Slot ${slot.slotId}</span>
-                            <span class="status-badge status-available">Available</span>
+                    <div class="available-slot-card">
+                        <div class="slot-title">Slot ${slot.slotId}</div>
+                        <div class="slot-row">
+                            <span class="status-badge">Available</span>
+                            <button class='user-btn' style='padding:4px 14px;font-size:0.95rem;' onclick='reserveSlotWithVehicle(${slot.slotId})'>Reserve</button>
                         </div>
-                        <button class='user-btn' style='padding:4px 14px;font-size:0.95rem;' onclick='reserveSlotWithVehicle(${slot.slotId})'>Reserve</button>
                     </div>`;
             });
             slotsHtml += '</div>';
