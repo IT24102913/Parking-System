@@ -222,64 +222,60 @@
     </ul>
 </nav>
 
-    <br><br><br><br><br><br> <br><br><br><br><br><br> <br><br><br><br><br><br> <br><br><br>
-    <section>
+<br><br><br><br><br><br> <br><br><br><br><br><br> <br><br><br><br><br><br> <br><br><br>
+<section>
 
-        <div class="register-box glass-card">
-            <button class="close-btn" onclick="window.location.href='home.html'">&times;</button>
-            <br>
-            <div class="register-title">Registration</div>
-            <form class="register-form">
-                <div class="input-group">
-                    <span class="input-icon"><i class="fa fa-user"></i></span>
-                    <input type="text" id="username" name="username" placeholder="Username" required />
-                </div>
-                <div class="input-group">
-                    <span class="input-icon"><i class="fa fa-envelope"></i></span>
-                    <input type="email" id="email" name="email" placeholder="Email" required />
-                </div>
-                <div class="input-group">
-                    <span class="input-icon"><i class="fa fa-lock"></i></span>
-                    <input type="password" id="password" name="password" placeholder="Password" required />
-                </div>
-
-                <button type="submit" class="register-btn-main">Register</button>
-            </form>
-            <div class="login-link">
-                Already have an account? <a href="Login.html">Login</a>
+    <div class="register-box glass-card">
+        <button class="close-btn" onclick="window.location.href='home.html'">&times;</button>
+        <br>
+        <div class="register-title">Registration</div>
+        <form class="register-form">
+            <div class="input-group">
+                <span class="input-icon"><i class="fa fa-user"></i></span>
+                <input type="text" id="username" name="username" placeholder="Username" required />
             </div>
-            <br>
+            <div class="input-group">
+                <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                <input type="email" id="email" name="email" placeholder="Email" required />
+            </div>
+            <div class="input-group">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input type="password" id="password" name="password" placeholder="Password" required />
+            </div>
+
+            <button type="submit" class="register-btn-main">Register</button>
+        </form>
+        <div class="login-link">
+            Already have an account? <a href="Login.html">Login</a>
         </div>
+        <br>
+    </div>
 </section>
-    <script>
-        document.querySelector('.register-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            // const username = document.getElementById('username').value; // Not needed by backend
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const terms = document.getElementById('terms').checked;
-            if (!terms) {
-                alert('You must agree to the terms & conditions.');
-                return;
+<script>
+    document.querySelector('.register-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        // const username = document.getElementById('username').value; // Not needed by backend
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        // Removed terms checkbox validation
+        // Send registration request
+        try {
+            const response = await fetch('http://localhost:8080/parking/user/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (response.ok) {
+                alert('Registration successful! Please login.');
+                window.location.href = 'Login.html';
+            } else {
+                const msg = await response.text();
+                alert('Registration failed: ' + msg);
             }
-            // Send registration request
-            try {
-                const response = await fetch('http://localhost:8080/parking/user/add', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                if (response.ok) {
-                    alert('Registration successful! Please login.');
-                    window.location.href = 'Login.html';
-                } else {
-                    const msg = await response.text();
-                    alert('Registration failed: ' + msg);
-                }
-            } catch (err) {
-                alert('Registration failed: ' + err.message);
-            }
-        });
-    </script>
+        } catch (err) {
+            alert('Registration failed: ' + err.message);
+        }
+    });
+</script>
 </body>
 </html> 
