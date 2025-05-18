@@ -11,6 +11,10 @@ public class Feedback {
     private String feedbackType;
     private String priority;
     private String feedbackDetails;
+    private String id;
+    private String date;
+    private String status = "Pending";
+
     public Feedback(){
 
     }
@@ -85,5 +89,29 @@ public class Feedback {
 
     public void setFeedbackDetails(String feedbackDetails) {
         this.feedbackDetails = feedbackDetails;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
