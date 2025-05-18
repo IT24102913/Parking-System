@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Services - Smart Parking Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    html, body { height: 100%; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body {
+      min-height: 100vh;
+      background: url('wallpaper.jpg') center center/cover no-repeat fixed, linear-gradient(135deg, #233347cc 0%, #1e2746cc 100%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      color: #eaf1fb;
+      animation: zoom 30s infinite alternate;
+    }
+    @keyframes zoom {
+      0% {
+        background-size: 100% 100%;
+      }
+      100% {
+        background-size: 120% 120%;
+      }
+    }
+    .navbar {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 60px; height: 70px; position: fixed; top: 0; left: 0; z-index: 10; box-sizing: border-box;
+      box-shadow: 0 2px 16px 0 rgba(31,38,135,0.10);
+    }
+    .navbar .logo { font-size: 1.7rem; font-weight: 700; letter-spacing: 1px; }
+    .navbar ul { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+    .navbar ul li { display: inline-block; }
+    .navbar ul li a { color: #fff; text-decoration: none; font-weight: 500; font-size: 1rem; transition: color 0.2s; padding: 8px 16px; border-radius: 8px; }
+    .navbar ul li a.active, .navbar ul li a:hover { color: #4e8cff; background: rgba(255,255,255,0.07); }
+    .navbar .login-btn { border: 2px solid #fff; border-radius: 8px; padding: 6px 22px; background: transparent; color: #fff; font-weight: 500; margin-left: 20px; transition: all 0.2s; cursor: pointer; }
+
+
+    .services-section {
+      width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px;
+
+    }
+    .services-header {
+      text-align: center; margin-bottom: 60px;
+    }
+    .services-header h1 {
+      font-size: 2.7rem; font-weight: 700; color: #eaf1fb; margin-bottom: 20px;
+    }
+    .services-header p {
+      font-size: 1.1rem; color: #b6c6e3; max-width: 800px; margin: 0 auto;
+    }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 60px;
+    }
+    .service-card {
+      background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+      box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+      border-radius: 18px; padding: 32px; transition: box-shadow 0.2s, transform 0.2s;
+      backdrop-filter: blur(100px);
+    }
+    .service-card:hover {
+      box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+      transform: translateY(-6px);
+    }
+    .service-icon {
+      font-size: 2.5rem; color: #4e8cff; margin-bottom: 20px;
+    }
+    .service-card h2 {
+      font-size: 1.5rem; color: #eaf1fb; margin-bottom: 15px;
+    }
+    .service-card p {
+      color: #b6c6e3; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;
+    }
+    .service-features {
+      list-style: none; padding: 0; margin: 0;
+    }
+    .service-features li {
+      color: #b6c6e3; font-size: 0.9rem; margin-bottom: 10px; padding-left: 25px;
+      position: relative;
+    }
+    .service-features li:before {
+      content: "✓"; color: #4e8cff; position: absolute; left: 0;
+    }
+    .pricing-section {
+      text-align: center; margin-top: 60px;
+    }
+    .pricing-section h2 {
+      font-size: 2.7rem;
+      color: #4e8cff;
+      margin-bottom: 50px;
+      letter-spacing: 1px;
+      text-align: center;
+      font-weight: 800;
+      text-shadow: 0 2px 16px #0006;
+    }
+    .pricing-cards {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: nowrap; /* Prevents wrapping to next row */
+    }
+
+    .pricing-card {
+      background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+      border-radius: 18px; padding: 40px; width: 300px; text-align: center;
+      backdrop-filter: blur(25px);
+    }
+    .pricing-card h3 {
+      color: #eaf1fb; font-size: 1.5rem; margin-bottom: 20px;
+    }
+    .price {
+      font-size: 2.5rem; color: #4e8cff; margin-bottom: 30px;
+    }
+    .price span {
+      font-size: 1rem; color: #b6c6e3;
+    }
+    .pricing-features {
+      list-style: none; padding: 0; margin: 0 0 30px 0;
+    }
+    .pricing-features li {
+      color: #b6c6e3; font-size: 0.9rem; margin-bottom: 10px;
+    }
+    .pricing-btn {
+      background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+      color: #fff; border: none; border-radius: 8px; padding: 12px 30px;
+      font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(31,38,135,0.10);
+    }
+    .pricing-btn:hover {
+      background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+    }
+    .footer {
+      width: 100%;
+      text-align: center;
+      color: #b6c6e3;
+      font-size: 1rem;
+      padding: 18px 0 10px 0;
+      background: transparent;
+      margin-top: auto;
+      position: relative;
+      bottom: 0;
+    }
+    @media (max-width: 1000px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .pricing-cards { flex-direction: column; align-items: center; }
+    }
+    @media (max-width: 600px) {
+      .navbar { padding: 0 10px; }
+      .container { padding-top: 80px; }
+      .services-header h1 { font-size: 2rem; }
+      .services-header p { font-size: 1rem; }
+    }
+    .page-fade {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: pageFadeIn 0.7s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes pageFadeIn {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">ParkingMS</div>
+  <ul>
+    <li><a href="home.html" class="active">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><button class="login-btn" onclick="window.location.href='Login.html'">Login</button></li>
+  </ul>
+</nav>
+
+<br>
+<br>
+<br>
+  <div class="services-section">
+    <div class="services-header">
+      <h1>Our Services</h1>
+      <p>Comprehensive parking management solutions tailored to your needs</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon"><i class="fas fa-parking"></i></div>
+        <h2>Smart Parking</h2>
+        <p>Real-time parking space monitoring and management system</p>
+        <ul class="service-features">
+          <li>Live parking availability</li>
+          <li>Automated space detection</li>
+          <li>Smart navigation to available spots</li>
+          <li>Parking analytics dashboard</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+        <h2>Mobile App</h2>
+        <p>User-friendly mobile application for seamless parking experience</p>
+        <ul class="service-features">
+          <li>Easy booking and payment</li>
+          <li>Real-time notifications</li>
+          <li>Parking history tracking</li>
+          <li>Digital receipts</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+        <h2>Security</h2>
+        <p>Advanced security features for safe parking operations</p>
+        <ul class="service-features">
+          <li>24/7 surveillance</li>
+          <li>Access control system</li>
+          <li>Emergency response</li>
+          <li>Vehicle tracking</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pricing-section">
+      <h2>Pricing Plans</h2>
+      <div class="pricing-cards">
+        <div class="pricing-card">
+          <h3>Basic</h3>
+          <br><br>
+          <ul class="pricing-features">
+            <li> 100LKR per hour for a car</li>
+            <li>Basic analytics</li>
+            <li>Email support</li>
+            <li>Mobile app access</li>
+          </ul>
+          <br><br>
+          <button class="pricing-btn">Get Started</button>
+        </div>
+        <div class="pricing-card">
+          <h3>Professional</h3>
+          <div class="price">$99<span>/month</span></div>
+          <ul class="pricing-features">
+            <li>Up to 200 parking spaces</li>
+            <li>Advanced analytics</li>
+            <li>Priority support</li>
+            <li>Custom branding</li>
+          </ul>
+          <button class="pricing-btn">Get Started</button>
+        </div>
+        <div class="pricing-card">
+          <h3>Enterprise</h3>
+          <div class="price">$199<span>/month</span></div>
+          <ul class="pricing-features">
+            <li>Unlimited parking spaces</li>
+            <li>Premium analytics</li>
+            <li>24/7 dedicated support</li>
+            <li>API access</li>
+          </ul>
+          <button class="pricing-btn">Get Started</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<br><br>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  });
+</script>
+</body>
+</html>
