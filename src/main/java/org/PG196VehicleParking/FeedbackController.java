@@ -37,10 +37,10 @@ public class FeedbackController {
 //                .orElse(new ResponseEntity<>("Feedback not found", HttpStatus.NOT_FOUND));
 //    }
 
-    // Update feedback by vehicleId
-    @PutMapping("/{vehicleId}")
-    public ResponseEntity<String> updateFeedback(@PathVariable String vehicleId, @RequestBody Feedback feedback) {
-        boolean updated = feedbackService.updateFeedback(vehicleId, feedback);
+    // Update feedback by id
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateFeedback(@PathVariable String id, @RequestBody Feedback feedback) {
+        boolean updated = feedbackService.updateFeedback(id, feedback);
         if (updated) {
             return new ResponseEntity<>("Feedback updated successfully", HttpStatus.OK);
         } else {
@@ -48,10 +48,10 @@ public class FeedbackController {
         }
     }
 
-    // Delete feedback by vehicleId
-    @DeleteMapping("/{vehicleId}")
-    public ResponseEntity<String> deleteFeedback(@PathVariable String vehicleId) {
-        boolean deleted = feedbackService.deleteFeedback(vehicleId);
+    // Delete feedback by id
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFeedback(@PathVariable String id) {
+        boolean deleted = feedbackService.deleteFeedback(id);
         if (deleted) {
             return new ResponseEntity<>("Feedback deleted successfully", HttpStatus.OK);
         } else {
