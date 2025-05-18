@@ -114,6 +114,7 @@
         .modal-bg {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(20,30,50,0.45); z-index: 1000; align-items: center; justify-content: center;
+            backdrop-filter: blur(16px);
         }
         .modal-bg.active { display: flex; }
         .modal {
@@ -294,10 +295,10 @@
                     <option value="Motorbike">Motorbike</option>
                 </select>
                 <label>Plate Number</label>
-                <input type="text" id="plateNumber" required placeholder="ABC-1234" style="width: 93%;">
+                <input type="text" id="plateNumber" required placeholder="ABC-1234">
                 <div id="carFields" style="display:none;">
                     <label>Number of Doors</label>
-                    <input type="number" id="doors" min="2" max="4" step="2" value="4" oninput="validateDoors(this)" style="width: 93%;">
+                    <input type="number" id="doors" min="2" max="4" step="2" value="4" oninput="validateDoors(this)">
                 </div>
                 <div id="bikeFields" style="display:none;">
                     <label>Has Sidecar</label>
