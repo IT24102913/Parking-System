@@ -38,8 +38,13 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+
+            background: url('wallpaper.jpg') center center/cover no-repeat fixed;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
         .navbar {
@@ -125,7 +130,21 @@
 
         /* Overlay styles */
         .overlay {
-            position: fixed;
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 40px 36px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            z-index: 2;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            min-height: auto;
+            overflow: visible;  position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -137,7 +156,7 @@
             z-index: 50;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease
         }
 
         .overlay.active {
@@ -146,15 +165,10 @@
         }
 
         .overlay-content {
-            background-color: white;
-            border-radius: 0.75rem;
-            width: 90%;
-            max-width: 700px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
+            background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+            border-radius: 18px; padding: 32px; transition: box-shadow 0.2s, transform 0.2s;
+            backdrop-filter: blur(100px);
         }
 
         .overlay.active .overlay-content {
@@ -184,21 +198,127 @@
         }
 
         .delete-overlay-content {
-            background-color: white;
-            border-radius: 0.5rem;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            transform: scale(0.95);
-            transition: transform 0.2s ease;
+            background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+            border-radius: 18px; padding: 32px; transition: box-shadow 0.2s, transform 0.2s;
+            backdrop-filter: blur(100px);
         }
 
         .delete-overlay.active .delete-overlay-content {
             transform: scale(1);
         }
+
+        /* Gradient text for table rows */
+        .table-gradient-text {
+            background: linear-gradient(90deg, #e0eaff 0%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* Make all table row text red on hover */
+        tbody tr:hover td, tbody tr:hover td * {
+            color: #ef4444 !important; /* Tailwind red-500 */
+            -webkit-text-fill-color: #ef4444 !important;
+        }
+
+        .overlay, .overlay * {
+            color: #f3f4f6 !important;
+        }
+
+        .overlay .bg-gray-50,
+        .overlay .bg-white {
+            background: transparent !important;
+            border: 1.5px solid #f3f4f6 !important;
+        }
+
+        .overlay input,
+        .overlay select,
+        .overlay textarea {
+            background: transparent !important;
+            color: #f3f4f6 !important;
+
+        }
+        .overlay input::placeholder,
+        .overlay textarea::placeholder {
+            color: #e5e7eb !important;
+        }
+
+        .glass-input {
+            background: rgba(255,255,255,0.12) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border: none !important;
+            color: #f3f4f6 !important;
+        }
+
+        .glass-card {
+            background: rgba(40, 40, 60, 0.45);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 1.25rem 1.5rem;
+            margin: 2rem auto;
+            max-width: 1500px;
+            width: 100%;
+        }
+        .nice-table {
+            background: #d4def5;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            color: #f3f4f6;
+            font-family: 'Inter', 'sans-serif';
+            background: transparent;
+            margin-top: 1rem;
+        }
+        .nice-table th {
+            color: #60a5fa;
+            font-weight: 700;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            background: transparent;
+            font-size: 1rem;
+            border-bottom: 2px solid rgba(255,255,255,0.10);
+        }
+        .nice-table td {
+            padding: 0.75rem 1rem;
+            background: transparent;
+            color: #f3f4f6;
+            font-size: 0.98rem;
+        }
+        .nice-table tbody tr {
+            transition: background 0.2s;
+        }
+        .nice-table tbody tr:nth-child(even) {
+            background: rgba(255,255,255,0.03);
+        }
+        .nice-table tbody tr:nth-child(odd) {
+            background: rgba(0,0,0,0.07);
+        }
+        .nice-table tbody tr:hover {
+            background: rgba(96,165,250,0.10);
+        }
+        .nice-table, .nice-table th, .nice-table td {
+            border: none;
+        }
+        .nice-table td, .nice-table th {
+            color: #f3f4f6 !important;
+            -webkit-text-fill-color: #f3f4f6 !important;
+        }
+        .nice-table tbody tr:hover td, .nice-table tbody tr:hover td * {
+            color: #60a5fa !important;
+            -webkit-text-fill-color: #60a5fa !important;
+        }
+        select.glass-input, select.glass-input option {
+            background: #232336 !important;
+            color: #f3f4f6 !important;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+<body background="wallpaper.jpg">
 <nav class="navbar">
     <div class="logo">ParkingMS</div>
     <ul>
@@ -206,7 +326,7 @@
         <li><a href="services.html">Services</a></li>
         <li><a href="contact.html">Contact</a></li>
         <li><a href="feedback.html">Feedback</a></li>
-        <li><button class="login-btn" onclick="window.location.href='Login.html'">Logout</button></li>
+        <li><button class="login-btn" onclick="window.location.href='Login.html'">Login</button></li>
     </ul>
 </nav>
 <div class="container mx-auto px-4 py-8 max-w-7xl" style="padding-top:7rem">
@@ -216,7 +336,7 @@
         <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary-500 rounded-full opacity-10 blur-xl"></div>
 
         <div class="relative">
-            <h1 class="text-3xl font-bold text-dark-800">Vehicle <span class="text-primary-600">Feedback</span> Hub</h1>
+            <h1 class="text-3xl font-bold text-dark-800" style="color: white">Vehicle <span class="text-primary-600">Feedback</span> Hub</h1>
             <p class="text-gray-500">Manage all vehicle feedback in one place</p>
         </div>
 
@@ -235,7 +355,7 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+        <div class="glass-blur rounded-xl p-6 shadow-lg border" style="background: rgba(255,255,255,0.08); border-radius: 15px; border: 1.5px solid rgba(255,255,255,0.18); box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-500 font-medium">Total Feedback</p>
@@ -251,7 +371,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+        <div class="glass-blur rounded-xl p-6 shadow-lg border" style="background: rgba(255,255,255,0.08); border-radius: 15px; border: 1.5px solid rgba(255,255,255,0.18); box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-500 font-medium">Pending</p>
@@ -267,7 +387,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+        <div class="glass-blur rounded-xl p-6 shadow-lg border" style="background: rgba(255,255,255,0.08); border-radius: 15px; border: 1.5px solid rgba(255,255,255,0.18); box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-500 font-medium">Resolved</p>
@@ -285,11 +405,10 @@
     </div>
 
     <!-- Main Content -->
-    <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+    <div class="glass-card bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100" style="background: rgba(40,40,60,0.45); border-radius: 18px; padding: 2rem 2.5rem; width: 100%; box-sizing: border-box; border: 1.5px solid rgba(255,255,255,0.18); box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18); z-index: 2; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; flex-direction: column; height: fit-content; min-height: auto; overflow: visible;">
         <!-- Table Header with Filters -->
         <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-            <h2 class="text-xl font-semibold text-dark-800">Recent Feedback</h2>
-
+            <h2 class="text-xl font-semibold text-dark-800" style="color: #00d2ff">Recent Feedback</h2>
             <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
                 <div class="relative">
                     <select class="appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
@@ -327,300 +446,21 @@
                 </div>
             </div>
         </div>
-
-        <!-- Feedback Table -->
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted By</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                <!-- Feedback Item 1 -->
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="text-sm font-medium text-gray-900">#FB-001</div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">Toyota Camry</div>
-                        <div class="text-xs text-gray-500">Sedan • 2023</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-2">
-                                <span class="text-xs font-medium">JD</span>
-                            </div>
-                            <div>
-                                <div class="text-sm font-medium text-gray-900">John Doe</div>
-                                <div class="text-xs text-gray-500">john.doe@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        May 12, 2025
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-600">Maintenance</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-pending px-2 py-1 text-xs rounded-full">Pending</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-yellow-600 hover:text-yellow-700">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Feedback Item 2 -->
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="text-sm font-medium text-gray-900">#FB-002</div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">Honda Civic</div>
-                        <div class="text-xs text-gray-500">Hatchback • 2022</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-2">
-                                <span class="text-xs font-medium">JS</span>
-                            </div>
-                            <div>
-                                <div class="text-sm font-medium text-gray-900">Jane Smith</div>
-                                <div class="text-xs text-gray-500">jane.smith@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        May 10, 2025
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full bg-purple-50 text-purple-600">Performance</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-resolved px-2 py-1 text-xs rounded-full">Resolved</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-yellow-600 hover:text-yellow-700">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Feedback Item 3 -->
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="text-sm font-medium text-gray-900">#FB-003</div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">Ford Transit</div>
-                        <div class="text-xs text-gray-500">Van • 2024</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center text-red-500 mr-2">
-                                <span class="text-xs font-medium">RJ</span>
-                            </div>
-                            <div>
-                                <div class="text-sm font-medium text-gray-900">Robert Johnson</div>
-                                <div class="text-xs text-gray-500">robert.j@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        May 8, 2025
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full bg-red-50 text-red-600">Safety</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-pending px-2 py-1 text-xs rounded-full">Pending</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-yellow-600 hover:text-yellow-700">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Feedback Item 4 -->
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="text-sm font-medium text-gray-900">#FB-004</div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">Tesla Model 3</div>
-                        <div class="text-xs text-gray-500">Electric • 2025</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 mr-2">
-                                <span class="text-xs font-medium">EW</span>
-                            </div>
-                            <div>
-                                <div class="text-sm font-medium text-gray-900">Emma Wilson</div>
-                                <div class="text-xs text-gray-500">emma.w@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        May 5, 2025
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-600">Maintenance</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-resolved px-2 py-1 text-xs rounded-full">Resolved</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-yellow-600 hover:text-yellow-700">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Feedback Item 5 -->
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="text-sm font-medium text-gray-900">#FB-005</div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">BMW X5</div>
-                        <div class="text-xs text-gray-500">SUV • 2023</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-500 mr-2">
-                                <span class="text-xs font-medium">MB</span>
-                            </div>
-                            <div>
-                                <div class="text-sm font-medium text-gray-900">Michael Brown</div>
-                                <div class="text-xs text-gray-500">michael.b@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        May 3, 2025
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full bg-purple-50 text-purple-600">Performance</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-pending px-2 py-1 text-xs rounded-full">Pending</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-yellow-600 hover:text-yellow-700">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Feedback Item 6 -->
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="text-sm font-medium text-gray-900">#FB-006</div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">Hyundai Tucson</div>
-                        <div class="text-xs text-gray-500">Crossover • 2024</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 mr-2">
-                                <span class="text-xs font-medium">SL</span>
-                            </div>
-                            <div>
-                                <div class="text-sm font-medium text-gray-900">Sarah Lee</div>
-                                <div class="text-xs text-gray-500">sarah.lee@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        May 1, 2025
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full bg-green-50 text-green-600">Comfort</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-resolved px-2 py-1 text-xs rounded-full">Resolved</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-yellow-600 hover:text-yellow-700">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <table class="nice-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Vehicle</th>
+                <th>Submitted By</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="feedbackTableBody">
+            <!-- Feedback rows will be inserted here by JS -->
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -646,7 +486,7 @@
                 </div>
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h3 class="text-sm font-medium text-gray-500 mb-1">Status</h3>
-                    <select id="editFeedbackStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select id="editFeedbackStatus" class="glass-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="Pending">Pending</option>
                         <option value="In Progress">In Progress</option>
                         <option value="Resolved">Resolved</option>
@@ -655,23 +495,9 @@
                 </div>
             </div>
 
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-3">Vehicle Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="editVehicle" class="block text-sm font-medium text-gray-700 mb-1">Vehicle</label>
-                        <input type="text" id="editVehicle" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" readonly>
-                    </div>
-                    <div>
-                        <label for="editMileage" class="block text-sm font-medium text-gray-700 mb-1">Current Mileage</label>
-                        <input type="text" id="editMileage" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-3">Feedback Type</h3>
-                <select id="editFeedbackType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <div class="mb-6">
+                <label for="editFeedbackType" class="block text-sm font-medium text-gray-700 mb-1">Feedback Type</label>
+                <select id="editFeedbackType" class="glass-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="Maintenance">Maintenance</option>
                     <option value="Performance">Performance</option>
                     <option value="Safety">Safety</option>
@@ -680,14 +506,14 @@
                 </select>
             </div>
 
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-3">Feedback Details</h3>
-                <textarea id="editFeedbackDetails" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+            <div class="mb-6">
+                <label for="editFeedbackDetails" class="block text-sm font-medium text-gray-700 mb-1">Feedback Details</label>
+                <textarea id="editFeedbackDetails" rows="5" class="glass-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
             </div>
 
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-3">Resolution Notes</h3>
-                <textarea id="editResolutionNotes" rows="3" placeholder="Add notes about how this feedback was addressed..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+            <div class="mb-6">
+                <label for="editResolutionNotes" class="block text-sm font-medium text-gray-700 mb-1">Resolution Notes</label>
+                <textarea id="editResolutionNotes" rows="3" placeholder="Add notes about how this feedback was addressed..." class="glass-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
             </div>
 
             <div class="flex justify-end space-x-3">
@@ -736,15 +562,15 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div class="bg-gray-50 p-4 rounded-lg">
+            <div class="bg-gray-50 p-4 rounded-2xl glass-effect" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1.5px solid rgba(255,255,255,0.18); border-radius: 22px;">
                 <h3 class="text-sm font-medium text-gray-500 mb-1">Feedback ID</h3>
                 <p class="text-lg font-semibold text-gray-900" id="feedbackId">#FB-001</p>
             </div>
-            <div class="bg-gray-50 p-4 rounded-lg">
+            <div class="bg-gray-50 p-4 rounded-2xl glass-effect" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1.5px solid rgba(255,255,255,0.18); border-radius: 22px;">
                 <h3 class="text-sm font-medium text-gray-500 mb-1">Submitted On</h3>
                 <p class="text-lg font-semibold text-gray-900" id="feedbackDate">May 12, 2025</p>
             </div>
-            <div class="bg-gray-50 p-4 rounded-lg">
+            <div class="bg-gray-50 p-4 rounded-2xl glass-effect" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1.5px solid rgba(255,255,255,0.18); border-radius: 22px;">
                 <h3 class="text-sm font-medium text-gray-500 mb-1">Status</h3>
                 <p class="text-lg font-semibold" id="feedbackStatus">
                     <span class="status-pending px-2 py-1 text-sm rounded-full">Pending</span>
@@ -753,51 +579,12 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-3">Vehicle Information</h3>
-                <div class="bg-white border border-gray-200 rounded-lg p-4">
-                    <div class="flex items-center mb-3">
-                        <div class="p-2 rounded-lg bg-blue-50 text-blue-600 mr-3">
-                            <i class="fas fa-car text-lg"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-semibold text-gray-900" id="vehicleName">Toyota Camry</h4>
-                            <p class="text-sm text-gray-500" id="vehicleType">Sedan • 2023</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <p class="text-gray-500">License Plate</p>
-                            <p class="font-medium text-gray-900" id="vehiclePlate">ABC-1234</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-500">Mileage</p>
-                            <p class="font-medium text-gray-900" id="vehicleMileage">24,567 km</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-3">Submitted By</h3>
-                <div class="bg-white border border-gray-200 rounded-lg p-4">
-                    <div class="flex items-center">
-                        <div id="submitterInitialsContainer" class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-3">
-                            <span class="text-sm font-medium" id="submitterInitials">JD</span>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-semibold text-gray-900" id="submitterName">John Doe</h4>
-                            <p class="text-sm text-gray-500" id="submitterEmail">john.doe@example.com</p>
-                            <p class="text-sm text-gray-500" id="submitterPhone">+1 (555) 123-4567</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Vehicle Information and Submitted By boxes removed as requested -->
         </div>
 
         <div class="mb-6">
             <h3 class="text-sm font-medium text-gray-500 mb-3">Feedback Type</h3>
-            <div id="feedbackTypeContainer" class="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm font-medium">
+            <div id="feedbackTypeContainer" class="inline-block px-3 py-1 rounded-full text-blue-600 text-sm font-medium">
                 Maintenance
             </div>
         </div>
@@ -827,9 +614,10 @@
 <script>
     // JavaScript to handle the overlay functionality
     document.addEventListener('DOMContentLoaded', function() {
+        // FIX: Define global feedbackData array
+        window.feedbackData = [];
         const overlay = document.getElementById('feedbackOverlay');
         const closeBtn = document.getElementById('closeOverlay');
-        const viewButtons = document.querySelectorAll('.fas.fa-eye');
         const editButtons = document.querySelectorAll('.fas.fa-edit');
         const deleteButtons = document.querySelectorAll('.fas.fa-trash');
         const deleteOverlay = document.getElementById('deleteConfirmOverlay');
@@ -843,111 +631,76 @@
         let currentDeleteIndex = null;
         let currentEditIndex = null;
 
-        // Data for each feedback item
-        const feedbackData = [
-            {
-                id: '#FB-001',
-                vehicle: 'Toyota Camry',
-                vehicleType: 'Sedan • 2023',
-                licensePlate: 'ABC-1234',
-                mileage: '24,567 km',
-                submitter: 'John Doe',
-                submitterEmail: 'john.doe@example.com',
-                submitterPhone: '+1 (555) 123-4567',
-                submitterInitials: 'JD',
-                submitterColor: 'blue',
-                date: 'May 12, 2025',
-                type: 'Maintenance',
-                typeColor: 'blue',
-                status: 'Pending',
-                details: 'The air conditioning system is not cooling properly. It takes a very long time to cool the car interior, especially during hot days. I\'ve noticed this issue for the past two weeks. The temperature dial is set to the coldest setting, but the air coming out is only slightly cool. Additionally, there\'s a slight rattling noise coming from the dashboard when the AC is on high.'
-            },
-            {
-                id: '#FB-002',
-                vehicle: 'Honda Civic',
-                vehicleType: 'Hatchback • 2022',
-                licensePlate: 'XYZ-5678',
-                mileage: '36,842 km',
-                submitter: 'Jane Smith',
-                submitterEmail: 'jane.smith@example.com',
-                submitterPhone: '+1 (555) 987-6543',
-                submitterInitials: 'JS',
-                submitterColor: 'green',
-                date: 'May 10, 2025',
-                type: 'Performance',
-                typeColor: 'purple',
-                status: 'Resolved',
-                details: 'The vehicle has been experiencing reduced power when accelerating, especially when merging onto highways. There\'s a noticeable lag between pressing the accelerator and the car responding. This issue seems to be worse when the engine is cold. I\'ve also noticed increased fuel consumption over the past month.'
-            },
-            {
-                id: '#FB-003',
-                vehicle: 'Ford Transit',
-                vehicleType: 'Van • 2024',
-                licensePlate: 'DEF-9012',
-                mileage: '15,321 km',
-                submitter: 'Robert Johnson',
-                submitterEmail: 'robert.j@example.com',
-                submitterPhone: '+1 (555) 456-7890',
-                submitterInitials: 'RJ',
-                submitterColor: 'red',
-                date: 'May 8, 2025',
-                type: 'Safety',
-                typeColor: 'red',
-                status: 'Pending',
-                details: 'The rear brake lights are intermittently failing to illuminate when braking. This has been observed by a passenger in a following vehicle. The issue occurs randomly and doesn\'t seem to be related to weather conditions. All other lights on the vehicle are functioning properly. This presents a significant safety concern, especially during night driving.'
-            },
-            {
-                id: '#FB-004',
-                vehicle: 'Tesla Model 3',
-                vehicleType: 'Electric • 2025',
-                licensePlate: 'GHI-3456',
-                mileage: '8,765 km',
-                submitter: 'Emma Wilson',
-                submitterEmail: 'emma.w@example.com',
-                submitterPhone: '+1 (555) 234-5678',
-                submitterInitials: 'EW',
-                submitterColor: 'purple',
-                date: 'May 5, 2025',
-                type: 'Maintenance',
-                typeColor: 'blue',
-                status: 'Resolved',
-                details: 'The touchscreen display occasionally freezes and becomes unresponsive. When this happens, several vehicle functions become inaccessible, including climate control and navigation. Restarting the vehicle temporarily resolves the issue, but it recurs unpredictably. The freezing seems to happen more frequently when using the navigation system.'
-            },
-            {
-                id: '#FB-005',
-                vehicle: 'BMW X5',
-                vehicleType: 'SUV • 2023',
-                licensePlate: 'JKL-7890',
-                mileage: '42,198 km',
-                submitter: 'Michael Brown',
-                submitterEmail: 'michael.b@example.com',
-                submitterPhone: '+1 (555) 876-5432',
-                submitterInitials: 'MB',
-                submitterColor: 'yellow',
-                date: 'May 3, 2025',
-                type: 'Performance',
-                typeColor: 'purple',
-                status: 'Pending',
-                details: 'The vehicle is producing a high-pitched whining noise when turning the steering wheel, particularly at low speeds such as when parking. The noise gets louder as the steering wheel approaches full lock in either direction. There are no apparent issues with the power steering functionality, but the noise is concerning and has been gradually increasing in volume over the past few weeks.'
-            },
-            {
-                id: '#FB-006',
-                vehicle: 'Hyundai Tucson',
-                vehicleType: 'Crossover • 2024',
-                licensePlate: 'MNO-1234',
-                mileage: '18,543 km',
-                submitter: 'Sarah Lee',
-                submitterEmail: 'sarah.lee@example.com',
-                submitterPhone: '+1 (555) 345-6789',
-                submitterInitials: 'SL',
-                submitterColor: 'indigo',
-                date: 'May 1, 2025',
-                type: 'Comfort',
-                typeColor: 'green',
-                status: 'Resolved',
-                details: 'The driver\'s seat has developed an uncomfortable pressure point that causes back pain during longer drives. The lumbar support adjustment doesn\'t seem to alleviate the issue. Additionally, the seat heating function on the driver\'s side is working inconsistently, sometimes turning off unexpectedly during use. The passenger seat functions are all working normally.'
-            }
-        ];
+        // Add this fetch-and-render logic:
+        fetch('http://localhost:8080/api/feedback')
+            .then(response => response.json())
+            .then(data => {
+                // FIX: Store data globally for action handlers
+                window.feedbackData = data;
+                const tbody = document.getElementById('feedbackTableBody');
+                tbody.innerHTML = '';
+                data.forEach((fb, idx) => {
+                    const statusClass = fb.status && fb.status.toLowerCase() === 'resolved' ? 'status-resolved' : 'status-pending';
+                    const typeColor = fb.feedbackType === 'Maintenance' ? 'text-blue-600' :
+                                      fb.feedbackType === 'Performance' ? 'text-purple-600' :
+                                      fb.feedbackType === 'Safety' ? 'text-red-600' :
+                                      fb.feedbackType === 'Comfort' ? 'text-green-600' : '';
+                    const feedbackId = fb.id ? fb.id.substring(0, 8) : `FB-${String(idx+1).padStart(3,'0')}`;
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap table-gradient-text">${feedbackId}</td>
+                            <td class="px-6 py-4 whitespace-nowrap table-gradient-text">
+                                <div class="text-sm">${fb.vehicleId || ''}</div>
+                                <div class="text-xs">${fb.mileage ? 'Mileage: ' + fb.mileage : ''}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap table-gradient-text">
+                                <div class="text-sm font-medium">${fb.name || ''}</div>
+                                <div class="text-xs">${fb.email || ''}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm table-gradient-text">${fb.date || '-'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap"><span class="text-xs ${typeColor}">${fb.feedbackType || ''}</span></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium table-gradient-text">
+                                <div class="flex space-x-2">
+                                    <button class="text-yellow-600 hover:text-yellow-700 edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="text-red-600 hover:text-red-900 delete-btn"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                // Attach event listeners to the newly created buttons
+                const editButtons = document.querySelectorAll('.edit-btn');
+                const deleteButtons = document.querySelectorAll('.delete-btn');
+                editButtons.forEach((button, index) => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentEditIndex = index;
+                        // Populate edit form with feedback data
+                        const data = feedbackData[index];
+                        document.getElementById('editFeedbackId').textContent = data.id;
+                        document.getElementById('editFeedbackDate').textContent = data.date;
+                        document.getElementById('editFeedbackStatus').value = data.status;
+                        document.getElementById('editFeedbackType').value = data.feedbackType;
+                        document.getElementById('editFeedbackDetails').value = data.feedbackDetails;
+                        // Show edit overlay
+                        editOverlay.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    });
+                });
+                deleteButtons.forEach((button, index) => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentDeleteIndex = index;
+                        // Update confirmation message with feedback details
+                        const data = feedbackData[index];
+                        document.getElementById('deleteConfirmMessage').textContent =
+                            `Are you sure you want to delete feedback #${data.id} for ${data.vehicle}? This action cannot be undone.`;
+                        // Show delete confirmation overlay
+                        deleteOverlay.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    });
+                });
+            });
 
         // Function to open overlay with specific feedback data
         function openOverlayWithData(index) {
@@ -974,23 +727,15 @@
             initialsContainer.className = `h-12 w-12 rounded-full bg-${data.submitterColor}-100 flex items-center justify-center text-${data.submitterColor}-500 mr-3`;
 
             const typeContainer = document.getElementById('feedbackTypeContainer');
-            typeContainer.className = `inline-block px-3 py-1 rounded-full bg-${data.typeColor}-50 text-${data.typeColor}-600 text-sm font-medium`;
-            typeContainer.textContent = data.type;
+            typeContainer.className = `inline-block px-3 py-1 rounded-full text-${data.typeColor}-600 text-sm font-medium`;
+            typeContainer.textContent = data.feedbackType;
 
-            document.getElementById('feedbackDetails').textContent = data.details;
+            document.getElementById('feedbackDetails').textContent = data.feedbackDetails;
 
             // Show the overlay
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden'; // Prevent scrolling of background
         }
-
-        // Add click event to all view buttons
-        viewButtons.forEach((button, index) => {
-            button.parentElement.addEventListener('click', function(e) {
-                e.preventDefault();
-                openOverlayWithData(index);
-            });
-        });
 
         // Close overlay when clicking the close button
         closeBtn.addEventListener('click', function() {
@@ -1026,23 +771,6 @@
             }
         });
 
-        // Handle delete button clicks
-        deleteButtons.forEach((button, index) => {
-            button.parentElement.addEventListener('click', function(e) {
-                e.preventDefault();
-                currentDeleteIndex = index;
-
-                // Update confirmation message with feedback details
-                const data = feedbackData[index];
-                document.getElementById('deleteConfirmMessage').textContent =
-                    `Are you sure you want to delete feedback #${data.id} for ${data.vehicle}? This action cannot be undone.`;
-
-                // Show delete confirmation overlay
-                deleteOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling of background
-            });
-        });
-
         // Cancel delete button
         cancelDeleteBtn.addEventListener('click', function() {
             deleteOverlay.classList.remove('active');
@@ -1053,22 +781,32 @@
         // Confirm delete button
         confirmDeleteBtn.addEventListener('click', function() {
             if (currentDeleteIndex !== null) {
-                // In a real application, you would send a request to the server to delete the feedback
-                // For this demo, we'll just show an alert and hide the overlay
-
                 const data = feedbackData[currentDeleteIndex];
-                alert(`Feedback ${data.id} has been deleted successfully.`);
-
-                // Hide the row (in a real app, you might refresh the data or remove the row from the DOM)
-                const tableRows = document.querySelectorAll('tbody tr');
-                if (tableRows[currentDeleteIndex]) {
-                    tableRows[currentDeleteIndex].style.display = 'none';
-                }
-
-                // Close the overlay
-                deleteOverlay.classList.remove('active');
-                document.body.style.overflow = ''; // Restore scrolling
-                currentDeleteIndex = null;
+                // Send DELETE request to backend
+                fetch(`http://localhost:8080/api/feedback/${data.id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert(`Feedback ${data.id} has been deleted successfully.`);
+                        // Remove from UI
+                        const tableRows = document.querySelectorAll('tbody tr');
+                        if (tableRows[currentDeleteIndex]) {
+                            tableRows[currentDeleteIndex].style.display = 'none';
+                        }
+                        // Optionally remove from feedbackData array
+                        feedbackData.splice(currentDeleteIndex, 1);
+                        // Close the overlay
+                        deleteOverlay.classList.remove('active');
+                        document.body.style.overflow = ''; // Restore scrolling
+                        currentDeleteIndex = null;
+                    } else {
+                        alert('Failed to delete feedback. Please try again.');
+                    }
+                })
+                .catch(() => {
+                    alert('Failed to delete feedback. Please try again.');
+                });
             }
         });
 
@@ -1079,28 +817,6 @@
                 document.body.style.overflow = ''; // Restore scrolling
                 currentDeleteIndex = null;
             }
-        });
-
-        // Handle edit button clicks
-        editButtons.forEach((button, index) => {
-            button.parentElement.addEventListener('click', function(e) {
-                e.preventDefault();
-                currentEditIndex = index;
-
-                // Populate edit form with feedback data
-                const data = feedbackData[index];
-                document.getElementById('editFeedbackId').textContent = data.id;
-                document.getElementById('editFeedbackDate').textContent = data.date;
-                document.getElementById('editFeedbackStatus').value = data.status;
-                document.getElementById('editVehicle').value = data.vehicle + ' (' + data.vehicleType + ')';
-                document.getElementById('editMileage').value = data.mileage;
-                document.getElementById('editFeedbackType').value = data.type;
-                document.getElementById('editFeedbackDetails').value = data.details;
-
-                // Show edit overlay
-                editOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling of background
-            });
         });
 
         // Close edit overlay when clicking the close button
@@ -1131,40 +847,41 @@
             e.preventDefault();
 
             if (currentEditIndex !== null) {
-                // In a real application, you would send the updated data to the server
-                // For this demo, we'll just update the local data and show an alert
-
                 const data = feedbackData[currentEditIndex];
                 const newStatus = document.getElementById('editFeedbackStatus').value;
-                const newMileage = document.getElementById('editMileage').value;
                 const newType = document.getElementById('editFeedbackType').value;
                 const newDetails = document.getElementById('editFeedbackDetails').value;
 
-                // Update data
-                data.status = newStatus;
-                data.mileage = newMileage;
-                data.type = newType;
-                data.details = newDetails;
+                // Prepare updated feedback object
+                const updatedFeedback = {
+                    ...data,
+                    status: newStatus,
+                    feedbackType: newType,
+                    feedbackDetails: newDetails
+                };
 
-                // Update UI if needed (in a real app, you might refresh the table)
-                const tableRows = document.querySelectorAll('tbody tr');
-                if (tableRows[currentEditIndex]) {
-                    // Update status cell
-                    const statusCell = tableRows[currentEditIndex].querySelector('td:nth-child(6) span');
-                    statusCell.textContent = newStatus;
-                    statusCell.className = `status-${newStatus.toLowerCase()} px-2 py-1 text-xs rounded-full`;
-
-                    // Update type cell
-                    const typeCell = tableRows[currentEditIndex].querySelector('td:nth-child(5) span');
-                    typeCell.textContent = newType;
-                }
-
-                alert(`Feedback ${data.id} has been updated successfully.`);
-
-                // Close the overlay
-                editOverlay.classList.remove('active');
-                document.body.style.overflow = ''; // Restore scrolling
-                currentEditIndex = null;
+                // Send PUT request to backend
+                fetch(`http://localhost:8080/api/feedback/${data.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedFeedback)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert(`Feedback ${data.id} has been updated successfully.`);
+                        // Optionally update UI here
+                        editOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                        currentEditIndex = null;
+                    } else {
+                        alert('Failed to update feedback. Please try again.');
+                    }
+                })
+                .catch(() => {
+                    alert('Failed to update feedback. Please try again.');
+                });
             }
         });
     });

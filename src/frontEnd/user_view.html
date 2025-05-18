@@ -322,6 +322,65 @@
             align-items: center;
             flex-direction: column;
         }
+        /* Profile modal redesign */
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 18px 0 0 0;
+            gap: 12px;
+        }
+        .profile-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #eaf1fb;
+            margin-bottom: 6px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .profile-divider {
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(90deg, #4e8cff 0%, #40cab7 100%);
+            border-radius: 2px;
+            margin-bottom: 18px;
+        }
+        .profile-form label {
+            align-self: flex-start;
+            color: #b6c6e3;
+            font-weight: 500;
+            margin-bottom: 2px;
+            margin-top: 8px;
+        }
+        .profile-form input[type='email'],
+        .profile-form input[type='password'] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1.5px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.10);
+            color: #eaf1fb;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+        .profile-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 13px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(31,38,135,0.10);
+        }
+        .profile-btn:hover {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+        }
     </style>
 </head>
 <body>
@@ -555,24 +614,15 @@
         const res = await fetch(`http://localhost:8080/parking/user/profile/${currentUserEmail}`);
         const profile = await res.json();
         let html = `
-            <form id='profileForm'>
-            <br>
+            <form id='profileForm' class="profile-form">
+                <div class="profile-title">Profile Settings</div>
+                <div class="profile-divider"></div>
                 <label>Email</label>
-                <input type='email' value='${profile.email || ''}' disabled style="width: 93%">
-                <br>
-                <br>
+                <input type='email' value='${profile.email || ''}' disabled>
                 <label>New Password</label>
-                <input type='password' id='profilePassword' required placeholder="Enter new password" style="width: 93%">
+                <input type='password' id='profilePassword' required placeholder="Enter new password">
                 <div class='error-msg' id='profileError'></div>
-                <br>
-                <button type='submit' class='user-btn'>Update Password</button>
-                <br>
-                <br>
-                <br>
-                <div class="profileupdate">
-                <p style="color: #ff4e4e"><center>Note: </center></p>
-                <p style="color: #ff4e4e"> <center>Your Profile will be updated</center></p>
-                </div>
+                <button type='submit' class='user-btn profile-btn'>Update Password</button>
             </form>`;
         showModal('<br> <center> Profile Settings', html);
         slideDashboardLeft();

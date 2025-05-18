@@ -1,308 +1,3 @@
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Vehicle Management System - Add Feedback</title>-->
-<!--    <script src="https://cdn.tailwindcss.com"></script>-->
-<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">-->
-<!--    <script>-->
-<!--        tailwind.config = {-->
-<!--            theme: {-->
-<!--                extend: {-->
-<!--                    colors: {-->
-<!--                        primary: {-->
-<!--                            light: '#3b82f6',-->
-<!--                            DEFAULT: '#2563eb',-->
-<!--                            dark: '#1d4ed8',-->
-<!--                        },-->
-<!--                        secondary: {-->
-<!--                            light: '#f59e0b',-->
-<!--                            DEFAULT: '#d97706',-->
-<!--                            dark: '#b45309',-->
-<!--                        },-->
-<!--                        dark: {-->
-<!--                            light: '#1e293b',-->
-<!--                            DEFAULT: '#0f172a',-->
-<!--                            dark: '#020617',-->
-<!--                        },-->
-<!--                    },-->
-<!--                    fontFamily: {-->
-<!--                        sans: ['Inter', 'sans-serif'],-->
-<!--                    },-->
-<!--                }-->
-<!--            }-->
-<!--        }-->
-<!--    </script>-->
-<!--    <style>-->
-<!--        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');-->
-
-<!--        body {-->
-<!--            font-family: 'Inter', sans-serif;-->
-<!--            background-color: #f8fafc;-->
-<!--        }-->
-
-<!--        .animate-float {-->
-<!--            animation: float 6s ease-in-out infinite;-->
-<!--        }-->
-
-<!--        @keyframes float {-->
-<!--            0%, 100% { transform: translateY(0); }-->
-<!--            50% { transform: translateY(-10px); }-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">-->
-<!--<div class="container mx-auto px-4 py-8 max-w-5xl">-->
-<!--    &lt;!&ndash; Header with floating elements &ndash;&gt;-->
-<!--    <div class="flex justify-between items-center mb-8 relative">-->
-<!--        <div class="absolute -top-10 -left-10 w-32 h-32 bg-blue-500 rounded-full opacity-10 blur-xl"></div>-->
-<!--        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500 rounded-full opacity-10 blur-xl"></div>-->
-
-<!--        <div class="relative">-->
-<!--            <h1 class="text-3xl font-bold text-dark-800">Add New <span class="text-blue-600">Feedback</span></h1>-->
-<!--            <p class="text-gray-500">Submit feedback for a vehicle</p>-->
-<!--        </div>-->
-
-<!--        <div class="relative">-->
-<!--            <a href="feedback.html" class="flex items-center text-gray-600 hover:text-blue-600 transition-colors">-->
-<!--                <i class="fas fa-arrow-left mr-2"></i>-->
-<!--                <span>Back to Feedback List</span>-->
-<!--            </a>-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Main Form &ndash;&gt;-->
-<!--    <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 p-6 mb-8">-->
-<!--        <form id="feedbackForm" class="space-y-8">-->
-<!--            &lt;!&ndash; Vehicle Information Section &ndash;&gt;-->
-<!--            <div>-->
-<!--                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">-->
-<!--                    <i class="fas fa-car text-blue-500 mr-2"></i>-->
-<!--                    Vehicle Information-->
-<!--                </h2>-->
-<!--                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
-<!--                    <div>-->
-<!--                        <label for="vehicleSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Vehicle</label>-->
-<!--                        <select id="vehicleSelect" name="vehicleId" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">-->
-<!--                            <option value="">&#45;&#45; Select a Vehicle &#45;&#45;</option>-->
-<!--                            <option value="1">Toyota Camry (ABC-1234)</option>-->
-<!--                            <option value="2">Honda Civic (XYZ-5678)</option>-->
-<!--                            <option value="3">Ford Transit (DEF-9012)</option>-->
-<!--                            <option value="4">Tesla Model 3 (GHI-3456)</option>-->
-<!--                            <option value="5">BMW X5 (JKL-7890)</option>-->
-<!--                            <option value="6">Hyundai Tucson (MNO-1234)</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-1">Current Mileage (km)</label>-->
-<!--                        <input type="number" id="mileage" name="mileage" placeholder="e.g. 24567" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; Submitter Information Section &ndash;&gt;-->
-<!--            <div>-->
-<!--                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">-->
-<!--                    <i class="fas fa-user text-blue-500 mr-2"></i>-->
-<!--                    Your Information-->
-<!--                </h2>-->
-<!--                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
-<!--                    <div>-->
-<!--                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>-->
-<!--                        <input type="text" id="name" name="name" placeholder="Your full name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>-->
-<!--                        <input type="email" id="email" name="email" placeholder="Your email address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>-->
-<!--                        <input type="tel" id="phone" name="phone" placeholder="Your phone number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="department" class="block text-sm font-medium text-gray-700 mb-1">Department</label>-->
-<!--                        <select id="department" name="department" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">-->
-<!--                            <option value="">&#45;&#45; Select Department &#45;&#45;</option>-->
-<!--                            <option value="sales">Sales</option>-->
-<!--                            <option value="operations">Operations</option>-->
-<!--                            <option value="management">Management</option>-->
-<!--                            <option value="delivery">Delivery</option>-->
-<!--                            <option value="other">Other</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; Feedback Details Section &ndash;&gt;-->
-<!--            <div>-->
-<!--                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">-->
-<!--                    <i class="fas fa-comment-alt text-blue-500 mr-2"></i>-->
-<!--                    Feedback Details-->
-<!--                </h2>-->
-<!--                <div class="space-y-6">-->
-<!--                    <div>-->
-<!--                        <label for="feedbackType" class="block text-sm font-medium text-gray-700 mb-1">Feedback Type</label>-->
-<!--                        <select id="feedbackType" name="feedbackType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">-->
-<!--                            <option value="">&#45;&#45; Select Feedback Type &#45;&#45;</option>-->
-<!--                            <option value="maintenance">Maintenance</option>-->
-<!--                            <option value="performance">Performance</option>-->
-<!--                            <option value="safety">Safety</option>-->
-<!--                            <option value="comfort">Comfort</option>-->
-<!--                            <option value="other">Other</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>-->
-<!--                        <div class="flex space-x-4">-->
-<!--                            <label class="inline-flex items-center">-->
-<!--                                <input type="radio" name="priority" value="low" class="text-blue-500 focus:ring-blue-500 h-4 w-4">-->
-<!--                                <span class="ml-2 text-gray-700">Low</span>-->
-<!--                            </label>-->
-<!--                            <label class="inline-flex items-center">-->
-<!--                                <input type="radio" name="priority" value="medium" class="text-blue-500 focus:ring-blue-500 h-4 w-4" checked>-->
-<!--                                <span class="ml-2 text-gray-700">Medium</span>-->
-<!--                            </label>-->
-<!--                            <label class="inline-flex items-center">-->
-<!--                                <input type="radio" name="priority" value="high" class="text-blue-500 focus:ring-blue-500 h-4 w-4">-->
-<!--                                <span class="ml-2 text-gray-700">High</span>-->
-<!--                            </label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="feedbackDetails" class="block text-sm font-medium text-gray-700 mb-1">Detailed Description</label>-->
-<!--                        <textarea id="feedbackDetails" name="feedbackDetails" rows="5" placeholder="Please provide a detailed description of your feedback..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label class="block text-sm font-medium text-gray-700 mb-1">Attachments (Optional)</label>-->
-<!--                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">-->
-<!--                            <div class="space-y-1 text-center">-->
-<!--                                <i class="fas fa-cloud-upload-alt text-gray-400 text-3xl mb-2"></i>-->
-<!--                                <div class="flex text-sm text-gray-600">-->
-<!--                                    <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">-->
-<!--                                        <span>Upload files</span>-->
-<!--                                        <input id="file-upload" name="file-upload" type="file" class="sr-only" multiple>-->
-<!--                                    </label>-->
-<!--                                    <p class="pl-1">or drag and drop</p>-->
-<!--                                </div>-->
-<!--                                <p class="text-xs text-gray-500">PNG, JPG, PDF up to 10MB</p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; Form Actions &ndash;&gt;-->
-<!--            <div class="flex justify-end space-x-4">-->
-<!--                <a href="Feedback.jsp" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">-->
-<!--                    Cancel-->
-<!--                </a>-->
-<!--                <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">-->
-<!--                    Submit Feedback-->
-<!--                </button>-->
-<!--            </div>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
-
-<!--<script>-->
-<!--    document.addEventListener('DOMContentLoaded', function() {-->
-<!--        const form = document.getElementById('feedbackForm');-->
-
-<!--        form.addEventListener('submit', function(e) {-->
-<!--            e.preventDefault();-->
-
-<!--            // Basic form validation-->
-<!--            const vehicleSelect = document.getElementById('vehicleSelect');-->
-<!--            const name = document.getElementById('name');-->
-<!--            const email = document.getElementById('email');-->
-<!--            const feedbackType = document.getElementById('feedbackType');-->
-<!--            const feedbackDetails = document.getElementById('feedbackDetails');-->
-
-<!--            let isValid = true;-->
-
-<!--            if (vehicleSelect.value === '') {-->
-<!--                markInvalid(vehicleSelect, 'Please select a vehicle');-->
-<!--                isValid = false;-->
-<!--            } else {-->
-<!--                markValid(vehicleSelect);-->
-<!--            }-->
-
-<!--            if (name.value.trim() === '') {-->
-<!--                markInvalid(name, 'Please enter your name');-->
-<!--                isValid = false;-->
-<!--            } else {-->
-<!--                markValid(name);-->
-<!--            }-->
-
-<!--            if (email.value.trim() === '') {-->
-<!--                markInvalid(email, 'Please enter your email');-->
-<!--                isValid = false;-->
-<!--            } else if (!isValidEmail(email.value)) {-->
-<!--                markInvalid(email, 'Please enter a valid email address');-->
-<!--                isValid = false;-->
-<!--            } else {-->
-<!--                markValid(email);-->
-<!--            }-->
-
-<!--            if (feedbackType.value === '') {-->
-<!--                markInvalid(feedbackType, 'Please select a feedback type');-->
-<!--                isValid = false;-->
-<!--            } else {-->
-<!--                markValid(feedbackType);-->
-<!--            }-->
-
-<!--            if (feedbackDetails.value.trim() === '') {-->
-<!--                markInvalid(feedbackDetails, 'Please provide feedback details');-->
-<!--                isValid = false;-->
-<!--            } else {-->
-<!--                markValid(feedbackDetails);-->
-<!--            }-->
-
-<!--            if (isValid) {-->
-<!--                // In a real application, you would submit the form data to the server here-->
-<!--                // For this demo, we'll just redirect back to the feedback list with a success message-->
-<!--                alert('Feedback submitted successfully!');-->
-<!--                window.location.href = 'Feedback.jsp';-->
-<!--            }-->
-<!--        });-->
-
-<!--        function markInvalid(element, message) {-->
-<!--            element.classList.add('border-red-500');-->
-<!--            element.classList.remove('border-gray-300');-->
-
-<!--            // Add error message if it doesn't exist-->
-<!--            let errorElement = element.parentElement.querySelector('.error-message');-->
-<!--            if (!errorElement) {-->
-<!--                errorElement = document.createElement('p');-->
-<!--                errorElement.className = 'error-message text-red-500 text-xs mt-1';-->
-<!--                element.parentElement.appendChild(errorElement);-->
-<!--            }-->
-<!--            errorElement.textContent = message;-->
-<!--        }-->
-
-<!--        function markValid(element) {-->
-<!--            element.classList.remove('border-red-500');-->
-<!--            element.classList.add('border-gray-300');-->
-
-<!--            // Remove error message if it exists-->
-<!--            const errorElement = element.parentElement.querySelector('.error-message');-->
-<!--            if (errorElement) {-->
-<!--                errorElement.remove();-->
-<!--            }-->
-<!--        }-->
-
-<!--        function isValidEmail(email) {-->
-<!--            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;-->
-<!--            return re.test(email);-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
-<!--</body>-->
-<!--</html>-->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -327,14 +22,115 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url('wallpaper.jpg') center center/cover no-repeat fixed;
+        }
         .animate-float { animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .glass-input, .glass-select, .glass-textarea {
+            background: rgba(255,255,255,0.18);
+            border: 1.5px solid rgba(255,255,255,0.28);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px 0 rgba(31,38,135,0.10);
+            color: #fff;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .glass-input:focus, .glass-select:focus, .glass-textarea:focus {
+            border: 1.5px solid #3b82f6;
+            box-shadow: 0 0 0 2px #3b82f655;
+            outline: none;
+            background: rgba(255,255,255,0.28);
+            color: #fff;
+        }
+        .glass-input::placeholder, .glass-textarea::placeholder {
+            color: #e0e0e0;
+            opacity: 1;
+        }
+        label, .form-section-title, h2, h1, h3, h4, h5, h6 {
+            color: #fff !important;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.25);
+        }
+        .form-section-title, h2 {
+            font-weight: 700;
+        }
+        .text-gray-500, .text-gray-700, .text-dark-800 {
+            color: #fff !important;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.25);
+        }
+        .form-radio-label, .form-checkbox-label {
+            color: #fff !important;
+        }
+        .navbar {
+                     width: 100%;
+                     background: rgba(0, 0, 0, 0.95);
+                     color: #fff;
+                     display: flex;
+                     align-items: center;
+                     justify-content: space-between;
+                     padding: 0 60px;
+                     height: 70px;
+                     position: fixed;
+                     top: 0;
+                     left: 0;
+                     z-index: 10;
+                     box-sizing: border-box;
+                     box-shadow: 0 2px 16px 0 rgba(31,38,135,0.10);
+                 }
+        .navbar .logo {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar ul li { display: inline-block; }
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        .navbar ul li a.active,
+        .navbar ul li a:hover {
+            color: #4e8cff;
+            background: rgba(255,255,255,0.07);
+        }
+        .navbar .login-btn {
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 6px 22px;
+            background: transparent;
+            color: #fff;
+            font-weight: 500;
+            margin-left: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+<body >
 <div class="container mx-auto px-4 py-8 max-w-5xl">
-
+    <nav class="navbar">
+        <div class="logo">ParkingMS</div>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><button class="login-btn" onclick="window.location.href='Login.html'">Login</button></li>
+        </ul>
+    </nav>
+    <br><br><br>
     <!-- Header -->
     <div class="flex justify-between items-center mb-8 relative">
         <div class="absolute -top-10 -left-10 w-32 h-32 bg-blue-500 rounded-full opacity-10 blur-xl"></div>
@@ -344,26 +140,28 @@
             <p class="text-gray-500">Submit feedback for a vehicle</p>
         </div>
         <div class="relative">
-            <a href="feedback.html" class="flex items-center text-gray-600 hover:text-blue-600 transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i>
-                <span>Back to Feedback List</span>
-            </a>
+            <div class="glass-blur" style="background: rgba(255,255,255,0.12); border-radius: 12px; padding: 8px 20px; box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10); border: 1.5px solid rgba(255,255,255,0.18); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); display: inline-block;">
+                <a href="feedback.html" class="flex items-center text-gray-100 hover:text-blue-400 transition-colors font-semibold" style="font-size: 1.08rem; text-shadow: 0 1px 6px rgba(0,0,0,0.25);">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span>Back to Feedback List</span>
+                </a>
+            </div>
         </div>
     </div>
 
     <!-- Feedback Form -->
-    <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 p-6 mb-8">
+    <div class="glass-blur rounded-xl shadow-xl overflow-hidden border border-gray-100 p-6 mb-8" style="background: rgba(255,255,255,0.08); border-radius: 15px; padding: 40px 36px; width: 100%; box-sizing: border-box; border: 1.5px solid rgba(255,255,255,0.18); box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18); z-index: 2; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); display: flex; flex-direction: column; height: fit-content; min-height: auto; overflow: visible;">
         <form id="feedbackForm" class="space-y-8">
             <!-- Vehicle Info -->
             <div>
                 <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
                     <i class="fas fa-car text-blue-500 mr-2"></i> Vehicle Information
                 </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" style="color: #3a7bd5">
+                    <div style="color: #3a7bd5">
                         <label for="vehicleSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Vehicle</label>
-                        <select id="vehicleSelect" name="vehicleId" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">-- Select a Vehicle --</option>
+                        <select style="color: #ecb58b" id="vehicleSelect" name="vehicleId" class="glass-select w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="" style="color: #3a7bd5">-- Select a Vehicle --</option>
                             <option value="1">Toyota Camry (ABC-1234)</option>
                             <option value="2">Honda Civic (XYZ-5678)</option>
                             <option value="3">Ford Transit (DEF-9012)</option>
@@ -374,7 +172,7 @@
                     </div>
                     <div>
                         <label for="mileage" class="block text-sm font-medium text-gray-700 mb-1">Current Mileage (km)</label>
-                        <input type="number" id="mileage" name="mileage" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g. 24567">
+                        <input type="number" id="mileage" name="mileage" class="glass-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g. 24567">
                     </div>
                 </div>
             </div>
@@ -387,19 +185,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                        <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input type="text" id="name" name="name" class="glass-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                        <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input type="email" id="email" name="email" class="glass-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
                     <div>
                         <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input type="tel" id="phone" name="phone" class="glass-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
                     <div>
                         <label for="department" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                        <select id="department" name="department" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select style="color: #ecb58b"id="department" name="department" class="glass-select w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">-- Select Department --</option>
                             <option value="sales">Sales</option>
                             <option value="operations">Operations</option>
@@ -419,7 +217,7 @@
                 <div class="space-y-6">
                     <div>
                         <label for="feedbackType" class="block text-sm font-medium text-gray-700 mb-1">Feedback Type</label>
-                        <select id="feedbackType" name="feedbackType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select style="color: #ecb58b" id="feedbackType" name="feedbackType" class="glass-select w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">-- Select Feedback Type --</option>
                             <option value="maintenance">Maintenance</option>
                             <option value="performance">Performance</option>
@@ -447,7 +245,7 @@
                     </div>
                     <div>
                         <label for="feedbackDetails" class="block text-sm font-medium text-gray-700 mb-1">Detailed Description</label>
-                        <textarea id="feedbackDetails" name="feedbackDetails" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        <textarea id="feedbackDetails" name="feedbackDetails" rows="5" class="glass-textarea w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                     </div>
                 </div>
             </div>
@@ -488,7 +286,7 @@
 
             if (response.ok) {
                 alert("Feedback submitted successfully!");
-                window.location.href = "AddFeedback.html";
+                window.location.href = "home.html";
             } else {
                 const errorData = await response.json();
                 alert("Error: " + (errorData.message || "Submission failed"));
