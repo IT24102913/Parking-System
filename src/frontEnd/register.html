@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Register - Smart Parking Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --glass-bg: rgba(30, 40, 60, 0.32);
+            --glass-border: rgba(255,255,255,0.12);
+            --text-color: #eaf1fb;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            background: url('wallpaper.jpg') center center/cover no-repeat fixed, linear-gradient(135deg, #233347cc 0%, #1e2746cc 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            color: #222;
+
+        }
+        @keyframes zoom {
+            0% { background-size: 100% 100%; }
+            100% { background-size: 120% 120%; }
+        }
+        section{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 10vh;
+
+
+        }
+        .glass-card, .register-box {
+            background: rgba(255,255,255,0.08);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            border-radius: 22px;
+            padding: 44px 36px 30px 36px;
+            min-width: 320px;
+            max-width: 370px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            flex: 1 1 auto;
+            min-height: 12vh;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .close-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 1.2rem;
+            color: #222;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .close-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+        .register-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #a57272;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        .register-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .input-group {
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-group .input-icon {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #40cab7;
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 0 10px 32px;
+            border: none;
+            border-bottom: 2px solid #bbb;
+            background: transparent;
+            color: #fff7f7;
+            font-size: 1rem;
+            outline: none;
+            border-radius: 0;
+            transition: border-color 0.2s;
+            z-index: 1;
+        }
+        .input-group input:focus {
+            border-bottom: 2px solid #4e8cff;
+        }
+        .terms-row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0 0 0;
+            font-size: 0.97rem;
+            color: #222;
+        }
+        .terms-row input[type="checkbox"] {
+            accent-color: #4e8cff;
+            width: 16px;
+            height: 16px;
+        }
+        .register-btn-main {
+            width: 100%;
+            background: #231c1c;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 13px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 18px 0 0 0;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(31,38,135,0.10);
+        }
+        .register-btn-main:hover {
+            background: #444;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 18px;
+            color: #ffffff;
+            font-size: 0.98rem;
+        }
+        .login-link a {
+            color: #ffffff;
+            text-decoration: underline;
+            margin-left: 4px;
+            font-weight: 500;
+        }
+        .login-link a:hover {
+            color: #4e8cff;
+        }
+        @media (max-width: 600px) {
+            .register-box { min-width: 90vw; max-width: 98vw; padding: 24px 8px; }
+        }
+        .navbar {
+            width: 100%; background: rgba(0, 0, 0, 0.95); color: #fff;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 60px; height: 70px; position: fixed; top: 0; left: 0; z-index: 10; box-sizing: border-box;
+            box-shadow: 0 2px 16px 0 rgba(31,38,135,0.10);
+        }
+        .navbar .logo { font-size: 1.7rem; font-weight: 700; letter-spacing: 1px; }
+        .navbar ul { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+        .navbar ul li { display: inline-block; }
+        .navbar ul li a { color: #fff; text-decoration: none; font-weight: 500; font-size: 1rem; transition: color 0.2s; padding: 8px 16px; border-radius: 8px; }
+        .navbar ul li a.active, .navbar ul li a:hover { color: #4e8cff; background: rgba(255,255,255,0.07); }
+        .navbar .login-btn { border: 2px solid #fff; border-radius: 8px; padding: 6px 22px; background: transparent; color: #fff; font-weight: 500; margin-left: 20px; transition: all 0.2s; cursor: pointer; }
+        @media (max-width: 600px) {
+            .navbar { padding: 0 10px; }
+        }
+        .page-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: pageFadeIn 0.7s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        @keyframes pageFadeIn {
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        /* MacOS Glassmorphism Style */
+        .macos-glass {
+            background: rgba(255,255,255,0.35);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            backdrop-filter: blur(60px) saturate(180%);
+            -webkit-backdrop-filter: blur(60px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">ParkingMS</div>
+    <ul>
+        <li><a href="home.html" class="active">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="feedback.html">Feedback</a></li>
+        <li><button class="login-btn" onclick="window.location.href='Login.html'">Login</button></li>
+    </ul>
+</nav>
+
+    <br><br><br><br><br><br> <br><br><br><br><br><br> <br><br><br><br><br><br> <br><br><br>
+    <section>
+
+        <div class="register-box glass-card">
+            <button class="close-btn" onclick="window.location.href='home.html'">&times;</button>
+            <br>
+            <div class="register-title">Registration</div>
+            <form class="register-form">
+                <div class="input-group">
+                    <span class="input-icon"><i class="fa fa-user"></i></span>
+                    <input type="text" id="username" name="username" placeholder="Username" required />
+                </div>
+                <div class="input-group">
+                    <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                    <input type="email" id="email" name="email" placeholder="Email" required />
+                </div>
+                <div class="input-group">
+                    <span class="input-icon"><i class="fa fa-lock"></i></span>
+                    <input type="password" id="password" name="password" placeholder="Password" required />
+                </div>
+
+                <button type="submit" class="register-btn-main">Register</button>
+            </form>
+            <div class="login-link">
+                Already have an account? <a href="Login.html">Login</a>
+            </div>
+            <br>
+        </div>
+</section>
+    <script>
+        document.querySelector('.register-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            // const username = document.getElementById('username').value; // Not needed by backend
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const terms = document.getElementById('terms').checked;
+            if (!terms) {
+                alert('You must agree to the terms & conditions.');
+                return;
+            }
+            // Send registration request
+            try {
+                const response = await fetch('http://localhost:8080/parking/user/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                if (response.ok) {
+                    alert('Registration successful! Please login.');
+                    window.location.href = 'Login.html';
+                } else {
+                    const msg = await response.text();
+                    alert('Registration failed: ' + msg);
+                }
+            } catch (err) {
+                alert('Registration failed: ' + err.message);
+            }
+        });
+    </script>
+</body>
+</html> 
