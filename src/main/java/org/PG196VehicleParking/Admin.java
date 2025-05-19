@@ -37,20 +37,20 @@ public class Admin {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    // Endpoint to add a new admin
+    // Endpoint to add a new admin, Check if admin already exists, // Save new admin credentials to file
     @PostMapping("/add")
     public ResponseEntity<String> addAdmin(@RequestBody Admin admin) {
-        // Validation: check for null email or password
+
         if (admin.getEmail() == null || admin.getPassword() == null) {
             return ResponseEntity.badRequest().body("Email and password are required");
         }
 
-        // Check if admin already exists
+
         if (existsInFile(ADMIN_FILE, admin.getEmail())) {
             return ResponseEntity.badRequest().body("Admin already exists");
         }
 
-        // Save new admin credentials to file
+
         writeToFile(ADMIN_FILE, admin.getEmail(), admin.getPassword());
         return ResponseEntity.ok("Admin added successfully");
     }
@@ -76,7 +76,7 @@ public class Admin {
     // Endpoint to delete an admin by email
     @DeleteMapping("/delete/{email}")
     public ResponseEntity<String> deleteAdmin(@PathVariable String email) {
-        boolean removed = deleteFromFile(ADMIN_FILE, email);  // Try to delete from file
+        boolean removed = deleteFromFile(ADMIN_FILE, email);
         if (removed) {
             return ResponseEntity.ok("Admin deleted successfully");
         } else {
@@ -96,7 +96,7 @@ public class Admin {
             Map<String, String> map = new HashMap<>();
             map.put("email", u.getEmail());
             map.put("password", u.getPassword());
-            result.add(map); // Add user map to result list
+            result.add(map);
         }
 
         return ResponseEntity.ok(result);  // Return list of users
@@ -138,9 +138,9 @@ public class Admin {
     // Helper method to write email and password to a file
     private void writeToFile(String filename, String email, String password) {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename, true)))) {
-            out.println(email + "," + password);  // Write data as CSV line
+            out.println(email + "," + password);
         } catch (IOException e) {
-            e.printStackTrace();  // Print error to console
+            e.printStackTrace();
         }
     }
 
@@ -158,7 +158,7 @@ public class Admin {
                 }
             }
         } catch (IOException e) {
-            // Exception is caught but not handled
+
         }
         return list;
     }
@@ -174,7 +174,7 @@ public class Admin {
             File file = new File(filename);
             if (!file.exists()) return false;
 
-            // Read all lines
+
             List<String> lines = Files.readAllLines(file.toPath());
             List<String> updated = new ArrayList<>();
             boolean found = false;
@@ -185,7 +185,7 @@ public class Admin {
                 if (!line.startsWith(email + ",")) {
                     updated.add(line);  // Keep this line
                 } else {
-                    found = true;  // Found the line to remove
+                    found = true;
                 }
             }
 
