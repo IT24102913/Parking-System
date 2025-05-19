@@ -24,20 +24,20 @@ public class Admin {
     // Default constructor
     public Admin() {}
 
-    // Parameterized constructor for easier object creation
+    // Parameterized constructor
     public Admin(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    // Getters and setters for email and password
+    // Getters and setters
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    // Endpoint to add a new admin, Check if admin already exists, // Save new admin credentials to file
+    // Endpoint to add a new admin, Check if admin already exists
     @PostMapping("/add")
     public ResponseEntity<String> addAdmin(@RequestBody Admin admin) {
 
@@ -70,7 +70,7 @@ public class Admin {
             result.add(map);
         }
 
-        return ResponseEntity.ok(result);  // Return list of maps as response
+        return ResponseEntity.ok(result);
     }
 
     // Endpoint to delete an admin by email
