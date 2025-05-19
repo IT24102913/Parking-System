@@ -154,7 +154,7 @@ public class Admin {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length >= 2) {
-                    list.add(new Admin(parts[0], parts[1]));  // Add to list
+                    list.add(new Admin(parts[0], parts[1]));
                 }
             }
         } catch (IOException e) {
@@ -183,7 +183,7 @@ public class Admin {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 if (!line.startsWith(email + ",")) {
-                    updated.add(line);  // Keep this line
+                    updated.add(line);
                 } else {
                     found = true;
                 }
@@ -194,9 +194,9 @@ public class Admin {
                 Files.write(file.toPath(), updated);
             }
 
-            return found;  // Return true if deletion was successful
+            return found;
         } catch (IOException e) {
-            e.printStackTrace();  // Print error
+            e.printStackTrace();
             return false;
         }
     }
