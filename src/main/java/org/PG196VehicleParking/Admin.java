@@ -87,7 +87,7 @@ public class Admin {
     // Endpoint to list all users (not admins)
     @GetMapping("/user/list")
     public ResponseEntity<List<Map<String, String>>> listUsers() {
-        List<Admin> users = readFromFile(USER_FILE);  // Read all users from file
+        List<Admin> users = readFromFile(USER_FILE);
         List<Map<String, String>> result = new ArrayList<>();
 
         // Convert each user to a map of email and password
@@ -105,7 +105,7 @@ public class Admin {
     // Endpoint to delete a user by email
     @DeleteMapping("/user/delete/{email}")
     public ResponseEntity<String> deleteUser(@PathVariable String email) {
-        boolean removed = deleteFromFile(USER_FILE, email);  // Try to delete from file
+        boolean removed = deleteFromFile(USER_FILE, email);
         if (removed) {
             return ResponseEntity.ok("User deleted successfully");
         } else {
