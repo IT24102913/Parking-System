@@ -84,7 +84,7 @@ public class Admin {
         }
     }
 
-    // Endpoint to list all users (not admins)
+    // Endpoint to list all users
     @GetMapping("/user/list")
     public ResponseEntity<List<Map<String, String>>> listUsers() {
         List<Admin> users = readFromFile(USER_FILE);
