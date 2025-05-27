@@ -2,7 +2,6 @@ package org.PG196VehicleParking;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.*;
@@ -11,19 +10,19 @@ import java.util.*;
 @RequestMapping("/parking")
 public class ParkingController {
 
+
     private static final String SLOT_FILE = "parking_slots.txt";
     private static final String VEHICLE_FILE = "vehicles.txt";
     private static final String HISTORY_FILE = "parking_history.txt";
     private static final String FEE_HISTORY_FILE = "parking_fees.txt";
 
-    private Stack<ParkingSlot> parkingSlots = new Stack<>();
+    private CustomStack<ParkingSlot> parkingSlots = new CustomStack<>(50);
 
-    // ========== IT24102913: SLOT MANAGEMENT ========== //
-
+    // ========== SLOT MANAGEMENT ========== //
 
     @GetMapping("/slots")
     public List<ParkingSlot> getAllSlots() {
-        return new ArrayList<>(parkingSlots);
+        return parkingSlots.getAll();
     }
 
     @PostMapping("/create")
@@ -33,16 +32,17 @@ public class ParkingController {
         return slot;
     }
 
-
     @PutMapping("/update/{slotId}")
     public ResponseEntity<?> updateSlot(@PathVariable int slotId, @RequestBody ParkingSlot updatedSlot) {
-        for (ParkingSlot slot : parkingSlots) {
+        for (ParkingSlot slot : parkingSlots.getAll()) {
             if (slot.getSlotId() == slotId) {
                 if (updatedSlot.isOccupied() != slot.isOccupied()) {
                     if (!updatedSlot.isOccupied()) {
+
                         List<Map<String, String>> history = readAllHistory();
                         for (Map<String, String> entry : history) {
                             if (Integer.parseInt(entry.get("slotId")) == slotId && entry.get("exitTime").equals("-")) {
+
                                 String email = entry.get("email");
                                 String plateNumber = entry.get("plateNumber");
                                 Date now = new Date();
@@ -63,6 +63,7 @@ public class ParkingController {
                             }
                         }
                     } else {
+
                         List<Map<String, String>> history = readAllHistory();
                         boolean isReserved = history.stream()
                                 .anyMatch(entry -> Integer.parseInt(entry.get("slotId")) == slotId && entry.get("exitTime").equals("-"));
@@ -74,7 +75,7 @@ public class ParkingController {
                     saveSlotsToFile();
                     return ResponseEntity.ok(slot);
                 }
-                return ResponseEntity.ok(slot); // No change needed
+                return ResponseEntity.ok(slot);
             }
         }
         return ResponseEntity.badRequest().body("Slot not found");
@@ -82,9 +83,11 @@ public class ParkingController {
 
     @DeleteMapping("/delete/{slotId}")
     public ResponseEntity<?> deleteSlot(@PathVariable int slotId) {
+
         List<Map<String, String>> history = readAllHistory();
         for (Map<String, String> entry : history) {
             if (Integer.parseInt(entry.get("slotId")) == slotId && entry.get("exitTime").equals("-")) {
+                // Mark as exited and calculate fee
                 String email = entry.get("email");
                 String plateNumber = entry.get("plateNumber");
                 Date now = new Date();
@@ -105,7 +108,21 @@ public class ParkingController {
             }
         }
 
-        boolean removed = parkingSlots.removeIf(slot -> slot.getSlotId() == slotId);
+
+        CustomStack<ParkingSlot> tempStack = new CustomStack<>(parkingSlots.size());
+        boolean removed = false;
+        while (!parkingSlots.isEmpty()) {
+            ParkingSlot slot = parkingSlots.pop();
+            if (slot.getSlotId() != slotId) {
+                tempStack.push(slot);
+            } else {
+                removed = true;
+            }
+        }
+
+        while (!tempStack.isEmpty()) {
+            parkingSlots.push(tempStack.pop());
+        }
         if (removed) {
             saveSlotsToFile();
             return ResponseEntity.ok(Collections.singletonMap("message", "Slot " + slotId + " deleted."));
@@ -116,67 +133,12 @@ public class ParkingController {
 
     @GetMapping("/sort")
     public List<ParkingSlot> sortSlots() {
-        List<ParkingSlot> sorted = new ArrayList<>(parkingSlots);
-        quicksort(sorted, 0, sorted.size() - 1);
+        List<ParkingSlot> sorted = new ArrayList<>(parkingSlots.getAll());
+        QuickSort.sort(sorted);
         return sorted;
     }
 
-
-    private void quicksort(List<ParkingSlot> list, int low, int high) {
-        if (low < high) {
-            int pi = partition(list, low, high);
-            quicksort(list, low, pi - 1);
-            quicksort(list, pi + 1, high);
-        }
-    }
-
-    private int partition(List<ParkingSlot> list, int low, int high) {
-        ParkingSlot pivot = list.get(high);
-        int i = low - 1;
-        for (int j = low; j < high; j++) {
-            if (!list.get(j).isOccupied() && pivot.isOccupied()) {
-                i++;
-                Collections.swap(list, i, j);
-            } else if (list.get(j).isOccupied() == pivot.isOccupied()) {
-                if (list.get(j).getSlotId() < pivot.getSlotId()) {
-                    i++;
-                    Collections.swap(list, i, j);
-                }
-            }
-        }
-        Collections.swap(list, i + 1, high);
-        return i + 1;
-    }
-
-    private void saveSlotsToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(SLOT_FILE))) {
-            for (ParkingSlot slot : parkingSlots) {
-                writer.write(slot.getSlotId() + "," + slot.isOccupied());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @PostConstruct
-    public void loadSlotsFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(SLOT_FILE))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                ParkingSlot slot = new ParkingSlot();
-                slot.setSlotId(Integer.parseInt(parts[0]));
-                slot.setIsOccupied(Boolean.parseBoolean(parts[1]));
-                parkingSlots.push(slot);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // ========== IT24102678: VEHICLE MANAGEMENT ========== //
-
+    // ========== VEHICLE MANAGEMENT ========== //
 
     @PostMapping("/vehicle/register")
     public ResponseEntity<String> registerVehicle(@RequestBody Map<String, String> payload) {
@@ -204,7 +166,6 @@ public class ParkingController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-
 
     @GetMapping("/vehicle/list")
     public List<Map<String, String>> listVehicles() {
@@ -254,24 +215,7 @@ public class ParkingController {
         return parkedVehicles;
     }
 
-    private void saveVehicleToFile(Vehicle vehicle) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(VEHICLE_FILE, true))) {
-            String details = "";
-            if (vehicle instanceof Car) {
-                details = "," + ((Car) vehicle).getDoors();
-            } else if (vehicle instanceof Motorbike) {
-                details = "," + ((Motorbike) vehicle).hasSidecar();
-            }
-            writer.write(vehicle.getType() + "," + vehicle.getPlateNumber() + details);
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // ========== IT24104385: PARKING FEE & HISTORY MANAGEMENT ========== //
-
-
+    // ========== PARKING FEE & HISTORY MANAGEMENT ========== //
 
     @PostMapping("/reserve")
     public ResponseEntity<?> reserveSlot(@RequestBody Map<String, String> payload) {
@@ -280,7 +224,7 @@ public class ParkingController {
         String plateNumber = payload.get("plateNumber");
         Date now = new Date();
 
-        for (ParkingSlot slot : parkingSlots) {
+        for (ParkingSlot slot : parkingSlots.getAll()) {
             if (slot.getSlotId() == slotId && !slot.isOccupied()) {
                 slot.setIsOccupied(true);
                 saveSlotsToFile();
@@ -296,14 +240,13 @@ public class ParkingController {
         return ResponseEntity.badRequest().body("Slot not available");
     }
 
-
     @PostMapping("/leave")
     public ResponseEntity<?> leaveSlot(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");
         int slotId = Integer.parseInt(payload.get("slotId"));
         Date now = new Date();
 
-        for (ParkingSlot slot : parkingSlots) {
+        for (ParkingSlot slot : parkingSlots.getAll()) {
             if (slot.getSlotId() == slotId && slot.isOccupied()) {
                 slot.setIsOccupied(false);
                 saveSlotsToFile();
@@ -333,12 +276,10 @@ public class ParkingController {
         return ResponseEntity.badRequest().body("Slot not occupied");
     }
 
-
     @GetMapping("/history/{email}")
     public List<Map<String, String>> getHistory(@PathVariable String email) {
         return readHistory(email);
     }
-
 
     @GetMapping("/fee/history")
     public List<Map<String, String>> getFeeHistory() {
@@ -362,7 +303,50 @@ public class ParkingController {
         }
         return fees;
     }
-    // ==========  HELPER METHODS ========== //
+
+    // ========== HELPER METHODS ========== //
+
+    private void saveSlotsToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(SLOT_FILE))) {
+            for (ParkingSlot slot : parkingSlots.getAll()) {
+                writer.write(slot.getSlotId() + "," + slot.isOccupied());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostConstruct
+    public void loadSlotsFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(SLOT_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                ParkingSlot slot = new ParkingSlot();
+                slot.setSlotId(Integer.parseInt(parts[0]));
+                slot.setIsOccupied(Boolean.parseBoolean(parts[1]));
+                parkingSlots.push(slot);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveVehicleToFile(Vehicle vehicle) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(VEHICLE_FILE, true))) {
+            String details = "";
+            if (vehicle instanceof Car) {
+                details = "," + ((Car) vehicle).getDoors();
+            } else if (vehicle instanceof Motorbike) {
+                details = "," + ((Motorbike) vehicle).hasSidecar();
+            }
+            writer.write(vehicle.getType() + "," + vehicle.getPlateNumber() + details);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private Map<String, String> findParkingEntry(String email, int slotId) {
         List<Map<String, String>> history = readAllHistory();
@@ -468,5 +452,4 @@ public class ParkingController {
         }
         return history;
     }
-
 }

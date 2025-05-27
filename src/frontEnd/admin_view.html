@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            /* macOS glassmorphism: light, frosted glass */
-            --glass-bg: rgba(255,255,255,0.15); /* semi-transparent white for glass effect */
+            --glass-bg: rgba(255,255,255,0.15);
             --glass-border: rgba(255,255,255,0.25);
             --text-color: #233347;
         }
@@ -24,12 +23,8 @@
             animation: zoom 30s infinite alternate;
         }
         @keyframes zoom {
-            0% {
-                background-size: 100% 100%;
-            }
-            100% {
-                background-size: 120% 120%;
-            }
+            0% { background-size: 100% 100%; }
+            100% { background-size: 120% 120%; }
         }
         .navbar {
             width: 100%;
@@ -104,20 +99,18 @@
             font-size: 1.1rem; color: #b6c6e3; margin-bottom: 32px; text-align: left;
         }
         .dashboard-card, .glass-card {
-            background: rgb(255, 255, 255); /* semi-transparent glass look */
-            border: 1px solid rgb(255, 255, 255); /* subtle border */
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1); /* soft shadow */
+            background: rgb(255, 255, 255);
+            border: 1px solid rgb(255, 255, 255);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
             backdrop-filter: blur(7px);
             -webkit-backdrop-filter: blur(7px);
             border-radius: 18px;
-
             color: inherit;
             padding: 36px 32px;
             min-width: 320px;
             max-width: 900px;
             width: 100%;
             margin: 0 auto 30px auto;
-
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -171,7 +164,6 @@
             position: relative;
             bottom: 0;
         }
-        /* Modal styles */
         .modal-bg {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(20,30,50,0.45); z-index: 1000; align-items: center; justify-content: center;
@@ -267,7 +259,6 @@
         }
         @media (max-width: 1000px) { .dashboard-card { max-width: 98vw; padding: 24px 8px; } }
         @media (max-width: 600px) { .navbar { padding: 0 10px; } .container { padding-top: 80px; } .dashboard-title { font-size: 1.5rem; } .dashboard-card { min-width: 90vw; max-width: 98vw; padding: 18px 4px; } }
-        /* macOS Glassmorphism Style */
         .macos-glass {
             background: rgba(255,255,255,0.08);
             border-radius: 15px;
@@ -284,6 +275,11 @@
             height: fit-content;
             min-height: auto;
             overflow: visible;
+        }
+        /* Added style for active sort button */
+        .dashboard-btn.active-sort {
+            background: linear-gradient(90deg, #27ae60, #2ecc71) !important;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
         }
     </style>
 </head>
@@ -377,16 +373,111 @@
 </div>
 
 <script>
-    // Modal helpers
+    // ========== GLOBAL STATE ========== //
+    let isSortedView = false;
+    let refreshInterval = 10000; // 10 seconds
+    let refreshTimer;
+
+    // ========== MODAL FUNCTIONS ========== //
     function showModal(title, content) {
         document.getElementById('modalContent').innerHTML = `<h2>${title}</h2>${content}`;
         document.getElementById('modalBg').classList.add('active');
     }
+
     function closeModal() {
         document.getElementById('modalBg').classList.remove('active');
     }
 
-    // Fetch and render users
+    // ========== SLOT MANAGEMENT ========== //
+    async function fetchSlots() {
+        try {
+            const url = isSortedView
+                ? `http://localhost:8080/parking/sort?t=${Date.now()}`
+                : `http://localhost:8080/parking/slots?t=${Date.now()}`;
+
+            const res = await fetch(url, {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            });
+
+            if (!res.ok) throw new Error(`Server returned ${res.status}`);
+
+            const slots = await res.json();
+            renderSlots(slots);
+            console.log(`${isSortedView ? 'Sorted' : 'Regular'} slots loaded`);
+        } catch (error) {
+            console.error('Error fetching slots:', error);
+            document.getElementById('slotTableBody').innerHTML =
+                `<tr><td colspan="3" style="text-align: center; color: #ff4e4e;">Error loading slot data</td></tr>`;
+        }
+    }
+
+    function renderSlots(slots) {
+        const tbody = document.getElementById('slotTableBody');
+        tbody.innerHTML = '';
+
+        if (slots && slots.length > 0) {
+            slots.forEach(slot => {
+                const status = slot.occupied ?
+                    '<span style="color:#e74c3c;">Occupied</span>' :
+                    '<span style="color:#27ae60;">Available</span>';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${slot.slotId}</td>
+                        <td>${status}</td>
+                        <td>
+                            <button class='dashboard-btn'
+                                style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ffd700,#ffb347);color:#233347;'
+                                onclick='editSlot(${slot.slotId},${slot.occupied})'>
+                                Edit
+                            </button>
+                            <button class='dashboard-btn'
+                                style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ff4e4e,#ff8c8c);'
+                                onclick='deleteSlot(${slot.slotId})'>
+                                Delete
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+            document.getElementById('totalSlots').textContent = slots.length;
+        } else {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center">No parking slots available</td></tr>`;
+        }
+    }
+
+    // ========== SORTING FUNCTIONALITY ========== //
+    document.getElementById('sortSlotsBtn').onclick = function() {
+        isSortedView = !isSortedView;
+        updateSortButton();
+        fetchSlots();
+    };
+
+    function updateSortButton() {
+        const btn = document.getElementById('sortSlotsBtn');
+        if (isSortedView) {
+            btn.innerHTML = '<i class="fas fa-sort-alpha-down"></i> Show Default View';
+            btn.classList.add('active-sort');
+        } else {
+            btn.innerHTML = '<i class="fas fa-sort"></i> Sort Slots';
+            btn.classList.remove('active-sort');
+        }
+    }
+
+    // ========== REFRESH MANAGEMENT ========== //
+    function setupAutoRefresh() {
+        clearInterval(refreshTimer); // Clear existing timer
+        refreshTimer = setInterval(() => {
+            fetchSlots();
+            fetchParkedVehicles();
+            fetchFeeHistory();
+        }, refreshInterval);
+    }
+
+    // ========== USER MANAGEMENT ========== //
     async function fetchUsers() {
         const res = await fetch('http://localhost:8080/parking/admin/user/list');
         const users = await res.json();
@@ -399,7 +490,7 @@
         });
         document.getElementById('totalUsers').textContent = users.length;
     }
-    // Fetch and render admins
+
     async function fetchAdmins() {
         const res = await fetch('http://localhost:8080/parking/admin/list');
         const admins = await res.json();
@@ -412,85 +503,8 @@
         });
         document.getElementById('totalAdmins').textContent = admins.length;
     }
-    // Fetch and render slots
-    async function fetchSlots() {
-        try {
-            const res = await fetch('http://localhost:8080/parking/slots', {
-                cache: 'no-cache',
-                headers: {
-                    'Cache-Control': 'no-cache',
-                    'Pragma': 'no-cache'
-                }
-            });
 
-            if (!res.ok) {
-                throw new Error(`Server returned ${res.status}: ${res.statusText}`);
-            }
-
-            const slots = await res.json();
-            const tbody = document.getElementById('slotTableBody');
-            tbody.innerHTML = '';
-
-            if (slots && slots.length > 0) {
-                slots.forEach(slot => {
-                    const status = slot.occupied ? '<span style="color:#e74c3c;">Occupied</span>' : '<span style="color:#27ae60;">Available</span>';
-                    tbody.innerHTML += `<tr><td>${slot.slotId}</td><td>${status}</td><td>
-                            <button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ffd700,#ffb347);color:#233347;' onclick='editSlot(${slot.slotId},${slot.occupied})'>Edit</button>
-                            <button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ff4e4e,#ff8c8c);' onclick='deleteSlot(${slot.slotId})'>Delete</button>
-                        </td></tr>`;
-                });
-            } else {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center">No parking slots available</td></tr>`;
-            }
-
-            document.getElementById('totalSlots').textContent = slots.length;
-            console.log("Parking slots data refreshed:", slots);
-        } catch (error) {
-            console.error('Error fetching parking slots:', error);
-            document.getElementById('slotTableBody').innerHTML =
-                `<tr><td colspan="3" style="text-align: center; color: #ff4e4e;">Error loading slot data. Please try again.</td></tr>`;
-        }
-    }
-
-    // Fetch and render sorted slots
-    async function fetchSortedSlots() {
-        try {
-            const res = await fetch('http://localhost:8080/parking/sort', {
-                cache: 'no-cache',
-                headers: {
-                    'Cache-Control': 'no-cache',
-                    'Pragma': 'no-cache'
-                }
-            });
-
-            if (!res.ok) {
-                throw new Error(`Server returned ${res.status}: ${res.statusText}`);
-            }
-
-            const slots = await res.json();
-            const tbody = document.getElementById('slotTableBody');
-            tbody.innerHTML = '';
-
-            if (slots && slots.length > 0) {
-                slots.forEach(slot => {
-                    const status = slot.occupied ? '<span style="color:#e74c3c;">Occupied</span>' : '<span style="color:#27ae60;">Available</span>';
-                    tbody.innerHTML += `<tr><td>${slot.slotId}</td><td>${status}</td><td>
-                            <button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ffd700,#ffb347);color:#233347;' onclick='editSlot(${slot.slotId},${slot.occupied})'>Edit</button>
-                            <button class='dashboard-btn' style='padding:4px 14px;font-size:0.95rem;background:linear-gradient(90deg,#ff4e4e,#ff8c8c);' onclick='deleteSlot(${slot.slotId})'>Delete</button>
-                        </td></tr>`;
-                });
-            } else {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center">No parking slots available</td></tr>`;
-            }
-
-            console.log("Sorted parking slots:", slots);
-        } catch (error) {
-            console.error('Error fetching sorted slots:', error);
-            document.getElementById('slotTableBody').innerHTML =
-                `<tr><td colspan="3" style="text-align: center; color: #ff4e4e;">Error loading sorted slot data. Please try again.</td></tr>`;
-        }
-    }
-
+    // ========== VEHICLE MANAGEMENT ========== //
     async function fetchParkedVehicles() {
         try {
             const res = await fetch('http://localhost:8080/parking/vehicle/parked', {
@@ -528,7 +542,37 @@
         }
     }
 
-    // Add user/admin modals
+    // ========== FEE HISTORY ========== //
+    async function fetchFeeHistory() {
+        try {
+            const res = await fetch('http://localhost:8080/parking/fee/history');
+            const fees = await res.json();
+            const tbody = document.getElementById('feeTableBody');
+            tbody.innerHTML = '';
+
+            if (fees.length > 0) {
+                fees.forEach(f => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                    <td>${f.email}</td>
+                    <td>${f.slotId}</td>
+                    <td>${f.plateNumber}</td>
+                    <td>LKR ${f.fee}</td>
+                    <td>${f.timestamp}</td>
+                `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center">No fee history available</td></tr>`;
+            }
+        } catch (error) {
+            console.error('Error fetching fee history:', error);
+            document.getElementById('feeTableBody').innerHTML =
+                `<tr><td colspan="5" style="text-align: center; color: #ff4e4e;">Error loading fee history. Please try again.</td></tr>`;
+        }
+    }
+
+    // ========== MODAL HANDLERS ========== //
     document.getElementById('addUserBtn').onclick = function() {
         showModal('Add User', `<form id='addUserForm'><label>Email</label><input type='email' id='userEmail' required><label>Password</label><input type='password' id='userPassword' required><div class='error-msg' id='userError'></div><button type='submit' class='dashboard-btn'>Add User</button></form>`);
         document.getElementById('addUserForm').onsubmit = async function(e) {
@@ -550,6 +594,7 @@
             }
         };
     };
+
     document.getElementById('addAdminBtn').onclick = function() {
         showModal('Add Admin', `<form id='addAdminForm'><label>Email</label><input type='email' id='adminEmail' required><label>Password</label><input type='password' id='adminPassword' required><div class='error-msg' id='adminError'></div><button type='submit' class='dashboard-btn'>Add Admin</button></form>`);
         document.getElementById('addAdminForm').onsubmit = async function(e) {
@@ -571,18 +616,21 @@
             }
         };
     };
-    // Delete user/admin
+
+    // ========== DELETE FUNCTIONS ========== //
     async function deleteUser(email) {
         if (!confirm('Delete user ' + email + '?')) return;
         await fetch(`http://localhost:8080/parking/admin/user/delete/${email}`, { method: 'DELETE' });
         fetchUsers();
     }
+
     async function deleteAdmin(email) {
         if (!confirm('Delete admin ' + email + '?')) return;
         await fetch(`http://localhost:8080/parking/admin/delete/${email}`, { method: 'DELETE' });
         fetchAdmins();
     }
-    // Add Slot
+
+    // ========== SLOT OPERATIONS ========== //
     document.getElementById('addSlotBtn').onclick = function() {
         showModal('Add Parking Slot', `<form id='addSlotForm'><label>Slot ID</label><input type='number' id='slotId' required min='1'><div class='error-msg' id='slotError'></div><button type='submit' class='dashboard-btn'>Add Slot</button></form>`);
         document.getElementById('addSlotForm').onsubmit = async function(e) {
@@ -615,7 +663,7 @@
             }
         };
     };
-    // Edit Slot
+
     window.editSlot = function(slotId, occupied) {
         showModal('Edit Parking Slot', `<form id='editSlotForm'><label>Slot ID</label><input type='number' id='editSlotId' value='${slotId}' disabled><label>Status</label><select id='editOccupied'><option value='false' ${!occupied ? 'selected' : ''}>Available</option><option value='true' ${occupied ? 'selected' : ''}>Occupied</option></select><div class='error-msg' id='editSlotError'></div><button type='submit' class='dashboard-btn'>Update Slot</button></form>`);
         document.getElementById('editSlotForm').onsubmit = async function(e) {
@@ -648,7 +696,7 @@
             }
         };
     };
-    // Delete Slot
+
     window.deleteSlot = async function(slotId) {
         if (!confirm('Delete slot ' + slotId + '?')) return;
         try {
@@ -670,58 +718,27 @@
             alert('Network error when deleting slot. Please try again.');
         }
     };
-    // Sort Slots Button Handler
-    document.getElementById('sortSlotsBtn').onclick = function() {
-        fetchSortedSlots();
-    };
-    // Fetch Fee History
-    async function fetchFeeHistory() {
-        try {
-            const res = await fetch('http://localhost:8080/parking/fee/history');
-            const fees = await res.json();
-            const tbody = document.getElementById('feeTableBody');
-            tbody.innerHTML = '';
 
-            if (fees.length > 0) {
-                fees.forEach(f => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                    <td>${f.email}</td>
-                    <td>${f.slotId}</td>
-                    <td>${f.plateNumber}</td>
-                    <td>LKR ${f.fee}</td>
-                    <td>${f.timestamp}</td>
-                `;
-                    tbody.appendChild(tr);
-                });
-            } else {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center">No fee history available</td></tr>`;
-            }
-        } catch (error) {
-            console.error('Error fetching fee history:', error);
-            document.getElementById('feeTableBody').innerHTML =
-                `<tr><td colspan="5" style="text-align: center; color: #ff4e4e;">Error loading fee history. Please try again.</td></tr>`;
-        }
-    }
-
-    // Initial load
-    fetchUsers();
-    fetchAdmins();
-    fetchSlots();
-    fetchParkedVehicles();
-    fetchFeeHistory();
-
-    // Periodic refresh
-    const refreshInterval = 10000;
-    setInterval(() => {
+    // ========== INITIALIZATION ========== //
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initial data load
+        fetchUsers();
+        fetchAdmins();
         fetchSlots();
         fetchParkedVehicles();
         fetchFeeHistory();
-    }, refreshInterval);
 
-    // Modal close handlers
-    document.getElementById('modalBg').onclick = function(e) { if (e.target === this) closeModal(); };
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+        // Setup auto-refresh
+        setupAutoRefresh();
+
+        // Modal close handlers
+        document.getElementById('modalBg').onclick = function(e) {
+            if (e.target === this) closeModal();
+        };
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e8e53f7fca53d4',t:'MTc0NzA0MjIwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
